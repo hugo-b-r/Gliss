@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.app',
               ),
+              SimpleAttributionWidget(source: Text('Map data: © OpenStreetMap-Mitwirkende, SRTM | Map display: © OpenTopoMap (CC-BY-SA)'))
             ],
           ),
         ],
