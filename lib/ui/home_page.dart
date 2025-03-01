@@ -69,10 +69,13 @@ class HorizontalHomePage extends StatelessWidget {
                   child: const Text("Ouvrir un fichier IGC"),
                 )),
               ])),
-          Expanded(
-              child: FlutterMapOpentopoPolyline(
-            polyline: map.polyline!,
-            mapOptions: map.mapOptions,
+          Expanded(child: Consumer<MapModel>(
+            builder: (context, map, child) {
+              return FlutterMapOpentopoPolyline(
+                polyline: map.polyline!,
+                mapOptions: map.mapOptions,
+              );
+            },
           ))
         ],
       );
@@ -90,9 +93,12 @@ class HorizontalHomePage extends StatelessWidget {
                   child: const Text("Ouvrir un fichier IGC"),
                 )),
               ])),
-          Expanded(
-              child: FlutterMapOpentopo(
-            mapOptions: map.mapOptions,
+          Expanded(child: Consumer<MapModel>(
+            builder: (context, map, child) {
+              return FlutterMapOpentopo(
+                mapOptions: map.mapOptions,
+              );
+            },
           ))
         ],
       );
@@ -117,13 +123,15 @@ class VerticalHomePage extends StatelessWidget {
       w = Column(
         children: [
           SizedBox(
-            height: 0.8 * height,
-            child: Expanded(
-                child: FlutterMapOpentopoPolyline(
-              polyline: map.polyline!,
-              mapOptions: map.mapOptions,
-            )),
-          ),
+              height: 0.8 * height,
+              child: Expanded(child: Consumer<MapModel>(
+                builder: (context, map, child) {
+                  return FlutterMapOpentopoPolyline(
+                    polyline: map.polyline!,
+                    mapOptions: map.mapOptions,
+                  );
+                },
+              ))),
           Expanded(
               child: ElevatedButton(
             onPressed: () async {
@@ -138,9 +146,12 @@ class VerticalHomePage extends StatelessWidget {
         children: [
           SizedBox(
             height: 0.8 * height,
-            child: Expanded(
-                child: FlutterMapOpentopo(
-              mapOptions: map.mapOptions,
+            child: Expanded(child: Consumer<MapModel>(
+              builder: (context, map, child) {
+                return FlutterMapOpentopo(
+                  mapOptions: map.mapOptions,
+                );
+              },
             )),
           ),
           Expanded(
@@ -153,11 +164,7 @@ class VerticalHomePage extends StatelessWidget {
         ],
       );
     }
-    return Consumer<MapModel>(
-      builder: (context, map, child) {
-        return w;
-      },
-    );
+    return w;
   }
 }
 
