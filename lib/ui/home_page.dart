@@ -33,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     // we need a layoutbuilder widget https://clouddevs.com/flutter/responsive-design/#:~:text=The%20LayoutBuilder%20widget%20gives%20you,adapt%20to%20different%20screen%20sizes.
-    map = context.watch<MapModel>();
     return Scaffold(
       body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -52,7 +51,7 @@ class HorizontalHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MapModel map = context.watch<MapModel>();
+    MapModel map = Provider.of<MapModel>(context);
     return Row(
       children: [
         SizedBox(
