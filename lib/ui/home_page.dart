@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+import 'package:gliding_aid/ui/home_page/flutter_map_opentopo_polyline.dart';
 import 'package:gliding_aid/viewModels/map_model.dart';
 import 'package:provider/provider.dart';
 
@@ -54,59 +53,24 @@ class HorizontalHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MapModel map = context.watch<MapModel>();
-    Widget w = const Text("we don't care about this actually");
-    if (map.polyline != null) {
-      w = Row(
-        children: [
-          SizedBox(
-              width: 442.0,
-              child: Wrap(spacing: 18.0, children: <Widget>[
-                UnconstrainedBox(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    await map.openIgcFile();
-                  },
-                  child: const Text("Ouvrir un fichier IGC"),
-                )),
-              ])),
-          Expanded(child: Consumer<MapModel>(
-            builder: (context, map, child) {
-              return FlutterMapOpentopoPolyline(
-                polyline: map.polyline!,
-                mapOptions: map.mapOptions,
-              );
-            },
-          ))
-        ],
-      );
-    } else {
-      w = Row(
-        children: [
-          SizedBox(
-              width: 442.0,
-              child: Wrap(spacing: 18.0, children: <Widget>[
-                UnconstrainedBox(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    await map.openIgcFile();
-                  },
-                  child: const Text("Ouvrir un fichier IGC"),
-                )),
-              ])),
-          Expanded(child: Consumer<MapModel>(
-            builder: (context, map, child) {
-              return FlutterMapOpentopo(
-                mapOptions: map.mapOptions,
-              );
-            },
-          ))
-        ],
-      );
-    }
-    return Consumer<MapModel>(
-      builder: (context, map, child) {
-        return w;
-      },
+    return Row(
+      children: [
+        SizedBox(
+            width: 442.0,
+            child: Wrap(spacing: 18.0, children: <Widget>[
+              UnconstrainedBox(
+                  child: ElevatedButton(
+                onPressed: () async {
+                  await map.openIgcFile();
+                },
+                child: const Text("Ouvrir un fichier IGC"),
+              )),
+            ])),
+        Expanded(
+            child: FlutterMapOpentopoPolyline(
+          mapOptions: map.mapOptions,
+        ))
+      ],
     );
   }
 }
@@ -116,112 +80,23 @@ class VerticalHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MapModel map = context.watch<MapModel>();
+    MapModel map = Provider.of<MapModel>(context, listen: false);
     double height = MediaQuery.sizeOf(context).height;
-    Widget w = const Text("We don't care about this one");
-    if (map.polyline != null) {
-      w = Column(
-        children: [
-          SizedBox(
-              height: 0.8 * height,
-              child: Expanded(child: Consumer<MapModel>(
-                builder: (context, map, child) {
-                  return FlutterMapOpentopoPolyline(
-                    polyline: map.polyline!,
-                    mapOptions: map.mapOptions,
-                  );
-                },
-              ))),
-          Expanded(
-              child: ElevatedButton(
-            onPressed: () async {
-              await map.openIgcFile();
-            },
-            child: const Text("Ouvrir un fichier IGC"),
-          )),
-        ],
-      );
-    } else {
-      w = Column(
-        children: [
-          SizedBox(
+    return Column(
+      children: [
+        SizedBox(
             height: 0.8 * height,
-            child: Expanded(child: Consumer<MapModel>(
-              builder: (context, map, child) {
-                return FlutterMapOpentopo(
-                  mapOptions: map.mapOptions,
-                );
-              },
-            )),
-          ),
-          Expanded(
-              child: ElevatedButton(
-            onPressed: () async {
-              await map.openIgcFile();
-            },
-            child: const Text("Ouvrir un fichier IGC"),
-          )),
-        ],
-      );
-    }
-    return w;
-  }
-}
-
-class FlutterMapOpentopo extends StatelessWidget {
-  const FlutterMapOpentopo({super.key, required this.mapOptions});
-
-  final MapOptions mapOptions;
-
-  @override
-  Widget build(BuildContext context) {
-    return FlutterMap(
-      options: mapOptions,
-      children: [
-        TileLayer(
-          urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
-          //tileProvider: CachedTileProvider(store: HiveCacheStore(path, hiveBoxName: 'HiveCacheStore')),
-          userAgentPackageName: 'com.gliding_aid.app',
-          tileProvider: CancellableNetworkTileProvider(),
-        ),
-        const RichAttributionWidget(
-            animationConfig: ScaleRAWA(),
-            attributions: [
-              TextSourceAttribution(
-                  'Map data: © OpenStreetMap-Mitwirkende, SRTM | Map display: © OpenTopoMap (CC-BY-SA)')
-            ]),
-      ],
-    );
-  }
-}
-
-class FlutterMapOpentopoPolyline extends StatelessWidget {
-  const FlutterMapOpentopoPolyline(
-      {super.key, required this.polyline, required this.mapOptions});
-
-  final Polyline<Object> polyline;
-  final MapOptions mapOptions;
-
-  @override
-  Widget build(BuildContext context) {
-    return FlutterMap(
-      options: mapOptions,
-      children: [
-        TileLayer(
-          urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
-          //tileProvider: CachedTileProvider(store: HiveCacheStore(path, hiveBoxName: 'HiveCacheStore')),
-          userAgentPackageName: 'com.gliding_aid.app',
-          tileProvider: CancellableNetworkTileProvider(),
-        ),
-        PolylineLayer(
-          polylines: [polyline],
-        ),
-        const RichAttributionWidget(
-            animationConfig: ScaleRAWA(),
-            attributions: [
-              TextSourceAttribution(
-                  'Map data: © OpenStreetMap-Mitwirkende, SRTM | Map display: © OpenTopoMap (CC-BY-SA)')
-            ]),
+            child: Expanded(
+                child: FlutterMapOpentopoPolyline(
+              mapOptions: map.mapOptions,
+            ))),
+        Expanded(
+            child: ElevatedButton(
+          onPressed: () async {
+            await map.openIgcFile();
+          },
+          child: const Text("Ouvrir un fichier IGC"),
+        )),
       ],
     );
   }
