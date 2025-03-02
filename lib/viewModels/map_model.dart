@@ -8,11 +8,13 @@ class MapModel extends ChangeNotifier {
   String _loadedIgcFile = "";
   Polyline? _polyline;
   LatLngBounds? _boundaries;
-  MapOptions _mapOptions = const MapOptions(
-      keepAlive: true, initialZoom: 3.2, initialCenter: LatLng(50.0, 5.0));
+  final MapController _mapController = MapController();
+  final MapOptions _mapOptions = const MapOptions(
+      keepAlive: false, initialZoom: 3.2, initialCenter: LatLng(50.0, 5.0));
 
   Polyline? get polyline => _polyline;
   MapOptions get mapOptions => _mapOptions;
+  MapController get mapController => _mapController;
 
   Future<void> openIgcFile() async {
     try {
@@ -25,13 +27,10 @@ class MapModel extends ChangeNotifier {
     _polyline = flight.toPolyline();
     if (polyline != null) {
       _boundaries = flight.toLatLngBounds();
-      _mapOptions = MapOptions(
-          keepAlive: true,
-          initialCenter: _boundaries!.center,
-          initialCameraFit: CameraFit.bounds(bounds: _boundaries!));
+      _mapController.move(_boundaries!.center, mapOptions.initialZoom);
+      _mapController.fitCamera(CameraFit.bounds(bounds: _boundaries!));
+
+      notifyListeners();
     }
-    print("Will notify listeners in the near future !");
-    notifyListeners();
-    print("just did so !");
   }
 }

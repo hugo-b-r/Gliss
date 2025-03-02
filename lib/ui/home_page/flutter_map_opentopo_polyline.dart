@@ -14,25 +14,27 @@ class FlutterMapOpentopoPolyline extends StatelessWidget {
     MapModel map = context.watch<MapModel>();
     Polyline? polyline = map.polyline;
     if (polyline != null) {
-      return MapPolyline(mapOptions: mapOptions, polyline: polyline);
+      return MapPolyline();
     } else {
-      return MapNoPolyline(mapOptions: mapOptions);
+      return MapNoPolyline();
     }
   }
 }
 
-class MapNoPolyline extends StatelessWidget {
-  const MapNoPolyline({
-    super.key,
-    required this.mapOptions,
-  });
-
-  final MapOptions mapOptions;
+class MapNoPolyline extends StatefulWidget {
+  MapNoPolyline({super.key});
 
   @override
+  State<MapNoPolyline> createState() => _MapNoPolylineState();
+}
+
+class _MapNoPolylineState extends State<MapNoPolyline> {
+  @override
   Widget build(BuildContext context) {
+    MapModel map = Provider.of<MapModel>(context);
     return FlutterMap(
-      options: mapOptions,
+      options: map.mapOptions,
+      mapController: map.mapController,
       children: [
         TileLayer(
           urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
@@ -51,20 +53,22 @@ class MapNoPolyline extends StatelessWidget {
   }
 }
 
-class MapPolyline extends StatelessWidget {
-  const MapPolyline({
+class MapPolyline extends StatefulWidget {
+  MapPolyline({
     super.key,
-    required this.mapOptions,
-    required this.polyline,
   });
 
-  final MapOptions mapOptions;
-  final Polyline polyline;
+  @override
+  State<MapPolyline> createState() => _MapPolylineState();
+}
 
+class _MapPolylineState extends State<MapPolyline> {
   @override
   Widget build(BuildContext context) {
+    MapModel map = Provider.of<MapModel>(context);
     return FlutterMap(
-      options: mapOptions,
+      options: map.mapOptions,
+      mapController: map.mapController,
       children: [
         TileLayer(
           urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
@@ -73,7 +77,9 @@ class MapPolyline extends StatelessWidget {
           tileProvider: CancellableNetworkTileProvider(),
         ),
         PolylineLayer(
-          polylines: [polyline],
+          polylines: [
+            map.polyline!
+          ], // We are sure the polyline is not null as tested before running this widget
         ),
         const RichAttributionWidget(
             animationConfig: ScaleRAWA(),
