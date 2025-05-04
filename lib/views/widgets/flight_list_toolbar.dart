@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gliding_aid/views/view_models/map_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
+
 class FlightListToolbar extends StatelessWidget {
   const FlightListToolbar({
     super.key,
@@ -17,7 +19,7 @@ class FlightListToolbar extends StatelessWidget {
             onPressed: () async {
               await map.openIgcFile();
             },
-            child: const Text("Ouvrir un fichier IGC"),
+            child: Text(AppLocalizations.of(context)!.openFlight),
           ),
           IconButton(
             iconSize: 24,

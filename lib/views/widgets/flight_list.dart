@@ -28,3 +28,4 @@ class _FlightListState extends State<FlightList> {
     return Column(children: flights);
   }
 }
+// Il faut créer une tile custom, ajouter un icon button avec l'icone "palette" pour le color picker, une croix pour supprimer le vol de la liste

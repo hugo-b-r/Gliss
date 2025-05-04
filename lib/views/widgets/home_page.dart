@@ -86,7 +86,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
         builder: (context, map, _) => Column(
               children: [
                 SizedBox(
-                    height: 0.8 * height,
+                    height: 0.6 * height,
                     child: const Expanded(child: FlutterMapOpentopoPolyline())),
                 Expanded(
                     child: ListView(children: <Widget>[
