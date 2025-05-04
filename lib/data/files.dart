@@ -7,9 +7,7 @@ Future<(String, String)> pickFirstFile() async {
   if (result != null) {
     var name = result.names[0];
     File file = File(result.files.single.path!);
-    if (name == null) {
-      name = "";
-    }
+    name ??= "";
     return (await file.readAsString(), name);
   } else {
     // User canceled the picker

@@ -12,7 +12,7 @@ class MapViewModel with ChangeNotifier {
   final List<FlightViewModel> flights = [];
   LatLngBounds? _boundaries;
   final MapController? _mapController = null;
-  double _initialZoom = 7;
+  final double _initialZoom = 7;
 
   double get initialZoom => _initialZoom;
 

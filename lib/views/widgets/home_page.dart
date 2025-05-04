@@ -80,9 +80,9 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
                           ),
                         ],
                       ),
-                      FlightList(),
+                      const FlightList(),
                     ])),
-                Expanded(child: FlutterMapOpentopoPolyline())
+                const Expanded(child: FlutterMapOpentopoPolyline())
               ],
             ));
   }
@@ -104,7 +104,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
               children: [
                 SizedBox(
                     height: 0.8 * height,
-                    child: Expanded(child: FlutterMapOpentopoPolyline())),
+                    child: const Expanded(child: FlutterMapOpentopoPolyline())),
                 Expanded(
                     child: ListView(children: <Widget>[
                   Row(
@@ -125,7 +125,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                       ),
                     ],
                   ),
-                  FlightList(),
+                  const FlightList(),
                 ])),
               ],
             ));

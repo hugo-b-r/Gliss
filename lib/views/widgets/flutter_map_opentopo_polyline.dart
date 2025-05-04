@@ -22,7 +22,7 @@ class _FlutterMapOpentopoPolylineState extends State<FlutterMapOpentopoPolyline>
     return Consumer<MapViewModel>(
       builder : (context, map, _) => FlutterMap(
         mapController: mapController,
-        options: MapOptions(keepAlive: false, initialZoom: 3.2, initialCenter: LatLng(50.0, 5.0), onMapReady: () =>{
+        options: MapOptions(keepAlive: false, initialZoom: 3.2, initialCenter: const LatLng(50.0, 5.0), onMapReady: () =>{
           map.set_mapController(mapController)}),
         children: [
           TileLayer(
