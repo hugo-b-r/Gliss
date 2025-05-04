@@ -10,16 +10,11 @@ import 'flight_view_model.dart';
 class MapViewModel with ChangeNotifier {
   String _loadedIgcFile = "";
   final List<FlightViewModel> flights = [];
-  LatLngBounds? _boundaries;
-  final MapController? _mapController = null;
+  MapController? mapController = null;
   final double _initialZoom = 7;
 
   double get initialZoom => _initialZoom;
 
-  MapController get mapController => mapController;
-  void set_mapController(MapController mapController) {
-    mapController = mapController;
-  }
 
   void clearFlights() {
     flights.clear();
@@ -50,9 +45,10 @@ class MapViewModel with ChangeNotifier {
     var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
     flights.add(flVm);
 
-    if (_mapController != null) {
-      _mapController.move(flVm.boundaries.center, _initialZoom);
-      _mapController.fitCamera(CameraFit.bounds(bounds: _boundaries!));
+    if (mapController != null) {
+      mapController!.move(flVm.boundaries.center, _initialZoom);
+      mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
+      print("MapController moving");
     }
     notifyListeners();
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/views/widgets/flight_list.dart';
+import 'package:gliding_aid/views/widgets/flight_list_toolbar.dart';
 import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 
@@ -56,35 +57,17 @@ class HorizontalHomePage extends StatefulWidget {
 class _HorizontalHomePageState extends State<HorizontalHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<MapViewModel>(
-        builder: (context, map, _) => Row(
-              children: [
-                SizedBox(
-                    width: 442.0,
-                    child: ListView(children: <Widget>[
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              await map.openIgcFile();
-                            },
-                            child: const Text("Ouvrir un fichier IGC"),
-                          ),
-                          IconButton(
-                            iconSize: 24,
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              map.clearFlights();
-                            },
-                            alignment: Alignment.topRight,
-                          ),
-                        ],
-                      ),
-                      const FlightList(),
-                    ])),
-                const Expanded(child: FlutterMapOpentopoPolyline())
-              ],
-            ));
+    return Row(
+      children: [
+        SizedBox(
+            width: 442.0,
+            child: ListView(children: <Widget>[
+              FlightListToolbar(),
+              const FlightList(),
+            ])),
+        const Expanded(child: FlutterMapOpentopoPolyline())
+      ],
+    );
   }
 }
 
@@ -107,24 +90,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                     child: const Expanded(child: FlutterMapOpentopoPolyline())),
                 Expanded(
                     child: ListView(children: <Widget>[
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          await map.openIgcFile();
-                        },
-                        child: const Text("Ouvrir un fichier IGC"),
-                      ),
-                      IconButton(
-                        iconSize: 24,
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          map.clearFlights();
-                        },
-                        alignment: Alignment.topRight,
-                      ),
-                    ],
-                  ),
+                  FlightListToolbar(),
                   const FlightList(),
                 ])),
               ],

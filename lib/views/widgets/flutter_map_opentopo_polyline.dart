@@ -20,10 +20,13 @@ class _FlutterMapOpentopoPolylineState extends State<FlutterMapOpentopoPolyline>
   @override
   Widget build(BuildContext context) {
     return Consumer<MapViewModel>(
+
       builder : (context, map, _) => FlutterMap(
+
         mapController: mapController,
-        options: MapOptions(keepAlive: false, initialZoom: 3.2, initialCenter: const LatLng(50.0, 5.0), onMapReady: () =>{
-          map.set_mapController(mapController)}),
+        options: MapOptions(keepAlive: false, initialZoom: 3.2, initialCenter: const LatLng(50.0, 5.0), onMapReady: () => {
+          map.mapController = mapController
+        }),
         children: [
           TileLayer(
             urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
