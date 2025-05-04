@@ -61,7 +61,7 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
               children: [
                 SizedBox(
                     width: 442.0,
-                    child: Column(children: <Widget>[
+                    child: ListView(children: <Widget>[
                       Row(
                         children: [
                           ElevatedButton(
@@ -106,7 +106,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                     height: 0.8 * height,
                     child: Expanded(child: FlutterMapOpentopoPolyline())),
                 Expanded(
-                    child: Column(children: <Widget>[
+                    child: ListView(children: <Widget>[
                   Row(
                     children: [
                       ElevatedButton(
