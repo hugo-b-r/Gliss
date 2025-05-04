@@ -3,15 +3,18 @@ import 'package:flutter_map/flutter_map.dart';
 
 import '../../data/igc_flight.dart';
 
-class FlightViewModel {
+class FlightViewModel extends ChangeNotifier {
+  String name = "";
   late Flight _flight;
   late Polyline _pl;
   late LatLngBounds _boundaries;
+  bool viewable = true;
 
-  FlightViewModel(Flight flight, Color color, double strokeWidth) {
+  FlightViewModel(Flight flight, Color color, double strokeWidth, String n) {
     _flight = flight;
     _pl = _flight.to_polyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
+    name = n;
   }
 
   Polyline get polyline => _pl;
@@ -21,5 +24,10 @@ class FlightViewModel {
   void setColor(Color c) {
     var s = _pl.strokeWidth;
     _pl = _flight.to_polyline(s, c);
+  }
+
+  void toggleViewable() {
+    viewable = !viewable;
+    notifyListeners();
   }
 }

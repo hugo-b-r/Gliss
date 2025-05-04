@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../data/igc_flight.dart';
 import '../../data/files.dart';
@@ -10,42 +9,55 @@ import 'flight_view_model.dart';
 
 class MapViewModel with ChangeNotifier {
   String _loadedIgcFile = "";
-  final List<FlightViewModel> _flights = [];
+  final List<FlightViewModel> flights = [];
   LatLngBounds? _boundaries;
-  final MapController _mapController = MapController();
-  final MapOptions _mapOptions = const MapOptions(keepAlive: false, initialZoom: 3.2, initialCenter: LatLng(50.0, 5.0));
+  final MapController? _mapController = null;
+  double _initialZoom = 7;
 
-  MapOptions get mapOptions => _mapOptions;
+  double get initialZoom => _initialZoom;
 
   MapController get mapController => mapController;
+  void set_mapController(MapController mapController) {
+    mapController = mapController;
+  }
 
   void clearFlights() {
-    _flights.clear();
+    flights.clear();
+    notifyListeners();
   }
 
   List<Polyline> polylines() {
     List<Polyline> polylines = [];
-    for (var flight in _flights) {
-      polylines.add(flight.polyline);
+    for (var flight in flights) {
+      if (flight.viewable == true) {
+        polylines.add(flight.polyline);
+      }
     }
     return polylines;
   }
 
   Future<void> openIgcFile() async {
+    var name = "";
+    var file;
     try {
-      _loadedIgcFile = await pickFirstFile();
+      (file, name) = await pickFirstFile();
+      _loadedIgcFile = file;
     } catch (e) {
       throw Exception(e);
     }
     var currentFlight = Flight.create_from_file(_loadedIgcFile, FlightParsingConfig());
     Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
-    var flVm = FlightViewModel(currentFlight, randomColor, 2);
-    _flights.add(flVm);
+    var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
+    flights.add(flVm);
 
-    // _mapController.move(flVm.boundaries.center, _mapOptions.initialZoom);
-    // _mapController.fitCamera(CameraFit.bounds(bounds: _boundaries!));
+    if (_mapController != null) {
+      _mapController.move(flVm.boundaries.center, _initialZoom);
+      _mapController.fitCamera(CameraFit.bounds(bounds: _boundaries!));
+    }
+    notifyListeners();
+  }
 
-    print("Opened an IGC file");
+  void mapNotifyListeners() {
     notifyListeners();
   }
 }
