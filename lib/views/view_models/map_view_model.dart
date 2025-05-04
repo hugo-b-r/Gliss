@@ -46,7 +46,7 @@ class MapViewModel with ChangeNotifier {
       throw Exception(e);
     }
     var currentFlight = Flight.create_from_file(_loadedIgcFile, FlightParsingConfig());
-    Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withValues(alpha: 1.0);
     var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
     flights.add(flVm);
 

@@ -10,7 +10,7 @@ Future<(String, String)> pickFirstFile() async {
     if (name == null) {
       name = "";
     }
-    return (await file.readAsString(), name!);
+    return (await file.readAsString(), name);
   } else {
     // User canceled the picker
     throw 'User canceled the picker !';
