@@ -1,3 +1,5 @@
 {
-  "openFlight" : "Open a flight"
+  "openFlight" : "Open a flight",
+  "pickYourColor" : "Pick a color",
+  "done" : "Done"
 }

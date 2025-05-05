@@ -1,3 +1,5 @@
 {
-  "openFlight" : "Ouvrir un vol"
+  "openFlight" : "Ouvrir un vol",
+  "pickYourColor" : "Choisir une couleur",
+  "done" : "Ok"
 }
