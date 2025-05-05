@@ -24,7 +24,7 @@ class _FlutterMapOpentopoPolylineState extends State<FlutterMapOpentopoPolyline>
       builder : (context, map, _) => FlutterMap(
 
         mapController: mapController,
-        options: MapOptions(keepAlive: false, initialZoom: 3.2, initialCenter: const LatLng(50.0, 5.0), onMapReady: () => {
+        options: MapOptions(keepAlive: true, initialZoom: 3.2, initialCenter: const LatLng(50.0, 5.0), onMapReady: () => {
           map.mapController = mapController
         }),
         children: [
@@ -33,6 +33,7 @@ class _FlutterMapOpentopoPolylineState extends State<FlutterMapOpentopoPolyline>
             //tileProvider: CachedTileProvider(store: HiveCacheStore(path, hiveBoxName: 'HiveCacheStore')),
             userAgentPackageName: 'com.gliding_aid.app',
             tileProvider: CancellableNetworkTileProvider(),
+            retinaMode: RetinaMode.isHighDensity(context),
           ),
           PolylineLayer(
             polylines: map.polylines(),
