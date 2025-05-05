@@ -43,7 +43,7 @@ class MapViewModel with ChangeNotifier {
         Flight.create_from_file(_loadedIgcFile, FlightParsingConfig());
     Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
         .withValues(alpha: 1.0);
-    var flVm = FlightViewModel(currentFlight, randomColor, 3, name);
+    var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
     flights.add(flVm);
 
     if (mapController != null) {
@@ -78,5 +78,10 @@ class MapViewModel with ChangeNotifier {
       mapController!.move(flight.boundaries.center, _initialZoom);
       mapController!.fitCamera(CameraFit.bounds(bounds: flight.boundaries));
     }
+  }
+
+  void deleteFlight(String name) {
+    flights.removeWhere((fl) => fl.name == name);
+    notifyListeners();
   }
 }

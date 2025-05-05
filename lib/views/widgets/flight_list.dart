@@ -19,27 +19,36 @@ class _FlightListState extends State<FlightList> {
     var map = Provider.of<MapViewModel>(context);
     for (var flight in map.flights) {
       flights.add(ListTile(
-          title: Text(flight.name),
-          trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-            IconButton(
-                onPressed: () => map.centerOnFlight(flight.name),
-                icon: const Icon(Icons.my_location)),
-            IconButton(
+        title: Text(flight.name),
+        leading: Row(mainAxisSize: MainAxisSize.min, children: [
+          IconButton(
+              onPressed: () => map.centerOnFlight(flight.name),
+              icon: const Icon(Icons.my_location)),
+          IconButton(
               color: flight.color,
-                onPressed: () async {
-                  var color = await pickColor(context, flight);
-                  map.updateFlightColor(flight.name, color);
-                },
-                icon: const Icon(Icons.palette)),
-            Checkbox(
-                value: flight.viewable,
-                onChanged: (bool? value) {
-                  setState(() {
-                    flight.toggleViewable();
-                    map.mapNotifyListeners();
-                  });
-                }),
-          ])));
+              onPressed: () async {
+                var color = await pickColor(context, flight);
+                map.updateFlightColor(flight.name, color);
+              },
+              icon: const Icon(Icons.palette)),
+          Checkbox(
+              value: flight.viewable,
+              onChanged: (bool? value) {
+                setState(() {
+                  flight.toggleViewable();
+                  map.mapNotifyListeners();
+                });
+              }),
+        ]),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+                onPressed: () => map.deleteFlight(flight.name),
+                icon: const Icon(Icons.close))
+          ],
+        ),
+      ));
     }
     return Column(children: flights);
   }

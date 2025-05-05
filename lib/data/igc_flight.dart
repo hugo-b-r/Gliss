@@ -920,7 +920,7 @@ class Flight {
         color: lineColor,
         strokeWidth: strokeWidth,
       borderColor: Colors.white,
-      borderStrokeWidth: 2,
+      borderStrokeWidth: 1,
     );
   }
 
