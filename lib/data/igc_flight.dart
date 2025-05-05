@@ -918,7 +918,9 @@ class Flight {
     return Polyline(
         points: points(),
         color: lineColor,
-        strokeWidth: strokeWidth
+        strokeWidth: strokeWidth,
+      borderColor: Colors.white,
+      borderStrokeWidth: 2,
     );
   }
 

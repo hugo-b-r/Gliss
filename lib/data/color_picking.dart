@@ -10,7 +10,7 @@ Future<Color> pickColor(BuildContext context, FlightViewModel fl) async {
       builder: (context) => AlertDialog(
             title: Text(AppLocalizations.of(context)!.pickYourColor),
             content: SingleChildScrollView(
-              child: MaterialPicker(
+              child: ColorPicker(
                 pickerColor: picker_color,
                 onColorChanged: (color) => {picker_color = color},
               ),

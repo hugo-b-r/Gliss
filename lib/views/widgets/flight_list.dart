@@ -22,6 +22,9 @@ class _FlightListState extends State<FlightList> {
           title: Text(flight.name),
           trailing: Row(mainAxisSize: MainAxisSize.min, children: [
             IconButton(
+                onPressed: () => map.centerOnFlight(flight.name),
+                icon: const Icon(Icons.my_location)),
+            IconButton(
               color: flight.color,
                 onPressed: () async {
                   var color = await pickColor(context, flight);
