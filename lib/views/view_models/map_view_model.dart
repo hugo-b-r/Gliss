@@ -15,7 +15,6 @@ class MapViewModel with ChangeNotifier {
 
   double get initialZoom => _initialZoom;
 
-
   void clearFlights() {
     flights.clear();
     notifyListeners();
@@ -40,8 +39,10 @@ class MapViewModel with ChangeNotifier {
     } catch (e) {
       throw Exception(e);
     }
-    var currentFlight = Flight.create_from_file(_loadedIgcFile, FlightParsingConfig());
-    Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withValues(alpha: 1.0);
+    var currentFlight =
+        Flight.create_from_file(_loadedIgcFile, FlightParsingConfig());
+    Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+        .withValues(alpha: 1.0);
     var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
     flights.add(flVm);
 
@@ -53,8 +54,17 @@ class MapViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFlightColor(String n, Color c) {
+    print("entering color update loop");
+    for (var f in flights) {
+      if (f.name == n) {
+        f.setColor(c);
+      }
+    }
+    notifyListeners();
+  }
+
   void mapNotifyListeners() {
     notifyListeners();
   }
 }
-

@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/data/color_picking.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/map_view_model.dart';
@@ -18,12 +18,25 @@ class _FlightListState extends State<FlightList> {
     List<Widget> flights = [];
     var map = Provider.of<MapViewModel>(context);
     for (var flight in map.flights) {
-      flights.add(CheckboxListTile(title: Text(flight.name), value: flight.viewable, onChanged:  (bool? value) {
-        setState(() {
-          flight.toggleViewable();
-          map.mapNotifyListeners();
-        });
-      }));
+      flights.add(ListTile(
+          title: Text(flight.name),
+          trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+            IconButton(
+              color: flight.color,
+                onPressed: () async {
+                  var color = await pickColor(context, flight);
+                  map.updateFlightColor(flight.name, color);
+                },
+                icon: const Icon(Icons.palette)),
+            Checkbox(
+                value: flight.viewable,
+                onChanged: (bool? value) {
+                  setState(() {
+                    flight.toggleViewable();
+                    map.mapNotifyListeners();
+                  });
+                }),
+          ])));
     }
     return Column(children: flights);
   }

@@ -9,9 +9,11 @@ class FlightViewModel extends ChangeNotifier {
   late Polyline _pl;
   late LatLngBounds _boundaries;
   bool viewable = true;
+  Color color = Colors.red;
 
-  FlightViewModel(Flight flight, Color color, double strokeWidth, String n) {
+  FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
     _flight = flight;
+    color = c;
     _pl = _flight.to_polyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
     name = n;
@@ -22,8 +24,9 @@ class FlightViewModel extends ChangeNotifier {
   LatLngBounds get boundaries => _boundaries;
 
   void setColor(Color c) {
+    color = c;
     var s = _pl.strokeWidth;
-    _pl = _flight.to_polyline(s, c);
+    _pl = _flight.to_polyline(s, color);
   }
 
   void toggleViewable() {
