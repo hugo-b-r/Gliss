@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,14 @@ class MapViewModel with ChangeNotifier {
   final List<FlightViewModel> flights = [];
   MapController? mapController = null;
   final double _initialZoom = 7;
+  String? selectedFlight = null;
+  LineChartData? lineChartData;
 
   double get initialZoom => _initialZoom;
 
   void clearFlights() {
     flights.clear();
+    lineChartData = LineChartData();
     notifyListeners();
   }
 
@@ -44,7 +48,10 @@ class MapViewModel with ChangeNotifier {
     Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
         .withValues(alpha: 1.0);
     var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
+
     flights.add(flVm);
+
+    setCurrentChartData(flVm);
 
     if (mapController != null) {
       mapController!.move(flVm.boundaries.center, _initialZoom);
@@ -82,6 +89,15 @@ class MapViewModel with ChangeNotifier {
 
   void deleteFlight(String name) {
     flights.removeWhere((fl) => fl.name == name);
+    if (flights.length == 0) {
+      lineChartData = LineChartData();
+    }
+    notifyListeners();
+  }
+
+  void setCurrentChartData(flight) {
+    selectedFlight = flight.name;
+    lineChartData = flight.lineChartData;
     notifyListeners();
   }
 }

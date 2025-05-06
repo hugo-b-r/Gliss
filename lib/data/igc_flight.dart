@@ -5,6 +5,7 @@ thanks to https://github.com/marcin-osowski/igc_lib for the help
 
 import 'dart:ui';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
@@ -930,5 +931,25 @@ class Flight {
       points.add(fix.to_lat_lng());
     }
     return points;
+  }
+
+  LineChartData toLineChartData() {
+    List<FlSpot> spots = [];
+    for (var fix in fixes) {
+      spots.add(FlSpot(fix.rawtime, fix.gnss_alt));
+    }
+    var lc = LineChartData(
+      lineBarsData: [LineChartBarData(
+        isCurved: true,
+        color: Colors.red,
+        barWidth: 2,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: false),
+        belowBarData: BarAreaData(show: false),
+
+      spots: spots,
+      ),
+    ]);
+    return lc;
   }
 }

@@ -5,6 +5,7 @@ import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/map_view_model.dart';
+import 'chart.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -63,7 +64,11 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
             width: 442.0,
             child: ListView(children: <Widget>[
               FlightListToolbar(),
-              const FlightList(),
+              FlightList(),
+              Consumer<MapViewModel>(
+                  builder: (context, map, _) => ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: 200, maxWidth: 20),
+                      child: FlightChart())),
             ])),
         const Expanded(child: FlutterMapOpentopoPolyline())
       ],
@@ -91,7 +96,12 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                 Expanded(
                     child: ListView(children: <Widget>[
                   FlightListToolbar(),
-                  const FlightList(),
+                  FlightList(),
+                  Consumer<MapViewModel>(
+                      builder: (context, map, _) => ConstrainedBox(
+                          constraints:
+                              BoxConstraints(maxHeight: 200, maxWidth: 20),
+                          child: FlightChart())),
                 ])),
               ],
             ));

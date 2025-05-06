@@ -31,6 +31,7 @@ class _FlutterMapOpentopoPolylineState extends State<FlutterMapOpentopoPolyline>
           TileLayer(
             urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
             //tileProvider: CachedTileProvider(store: HiveCacheStore(path, hiveBoxName: 'HiveCacheStore')),
+            // CancellableNetworkTileProvider(),
             userAgentPackageName: 'com.gliding_aid.app',
             tileProvider: CancellableNetworkTileProvider(),
             retinaMode: RetinaMode.isHighDensity(context),

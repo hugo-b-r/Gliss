@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -10,6 +11,7 @@ class FlightViewModel extends ChangeNotifier {
   late LatLngBounds _boundaries;
   bool viewable = true;
   Color color = Colors.red;
+  late LineChartData lineChartData;
 
   FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
     _flight = flight;
@@ -17,6 +19,7 @@ class FlightViewModel extends ChangeNotifier {
     _pl = _flight.to_polyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
     name = n;
+    lineChartData = flight.toLineChartData();
   }
 
   Polyline get polyline => _pl;
