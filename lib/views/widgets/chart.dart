@@ -14,7 +14,7 @@ class FlightChart extends StatelessWidget {
       print("using flights linechart !");
       return Consumer<MapViewModel>(builder: (context, map, _) => LineChart(map.lineChartData!));
     } else {
-      return LineChart(LineChartData(lineBarsData: []));
+      return const SizedBox.shrink();
     }
   }
 }

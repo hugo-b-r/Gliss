@@ -19,7 +19,7 @@ class FlightViewModel extends ChangeNotifier {
     _pl = _flight.to_polyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
     name = n;
-    lineChartData = flight.toLineChartData();
+    lineChartData = flight.toLineChartData(color);
   }
 
   Polyline get polyline => _pl;
@@ -30,6 +30,7 @@ class FlightViewModel extends ChangeNotifier {
     color = c;
     var s = _pl.strokeWidth;
     _pl = _flight.to_polyline(s, color);
+    lineChartData = _flight.toLineChartData(color);
   }
 
   void toggleViewable() {

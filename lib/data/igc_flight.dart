@@ -933,7 +933,7 @@ class Flight {
     return points;
   }
 
-  LineChartData toLineChartData() {
+  LineChartData toLineChartData(Color c) {
     List<FlSpot> spots = [];
     for (var fix in fixes) {
       spots.add(FlSpot(fix.rawtime, fix.gnss_alt));
@@ -941,7 +941,7 @@ class Flight {
     var lc = LineChartData(
       lineBarsData: [LineChartBarData(
         isCurved: true,
-        color: Colors.red,
+        color: c,
         barWidth: 2,
         isStrokeCapRound: true,
         dotData: const FlDotData(show: false),
