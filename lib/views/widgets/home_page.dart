@@ -58,18 +58,16 @@ class HorizontalHomePage extends StatefulWidget {
 class _HorizontalHomePageState extends State<HorizontalHomePage> {
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
     return Row(
       children: [
         SizedBox(
             width: 442.0,
-            child: ListView(children: <Widget>[
-              FlightListToolbar(),
-              FlightList(),
-              Consumer<MapViewModel>(
-                  builder: (context, map, _) => ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 200, maxWidth: 20),
-                      child: FlightChart())),
-            ])),
+            child: Column(children: [
+              const FlightListToolbar(),
+              const Expanded(child: SingleChildScrollView(child: FlightList())),
+              SizedBox(height: 0.3*height, child: FlightChart()),
+              ])),
         const Expanded(child: FlutterMapOpentopoPolyline())
       ],
     );
@@ -94,15 +92,11 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                     height: 0.6 * height,
                     child: const Expanded(child: FlutterMapOpentopoPolyline())),
                 Expanded(
-                    child: ListView(children: <Widget>[
-                  FlightListToolbar(),
-                  FlightList(),
-                  Consumer<MapViewModel>(
-                      builder: (context, map, _) => ConstrainedBox(
-                          constraints:
-                              BoxConstraints(maxHeight: 200, maxWidth: 20),
-                          child: FlightChart())),
-                ])),
+                    child: Column(children: [
+                      const FlightListToolbar(),
+                      const Expanded(child: SingleChildScrollView(child: FlightList())),
+                      SizedBox(height: 0.2*height, child: FlightChart()),
+                    ])),
               ],
             ));
   }
