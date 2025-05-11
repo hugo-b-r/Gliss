@@ -11,7 +11,7 @@ class FlightListToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MapViewModel>(
+    return Padding(padding: const EdgeInsets.all(10.0), child: Consumer<MapViewModel>(
       builder: (context, map, _) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -31,6 +31,6 @@ class FlightListToolbar extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
