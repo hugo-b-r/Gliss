@@ -34,7 +34,7 @@ class _FlutterMapOpentopoPolylineState extends State<FlutterMapOpentopoPolyline>
             // CancellableNetworkTileProvider(),
             userAgentPackageName: 'com.gliding_aid.app',
             tileProvider: CancellableNetworkTileProvider(),
-            retinaMode: RetinaMode.isHighDensity(context),
+            //retinaMode: RetinaMode.isHighDensity(context),
           ),
           PolylineLayer(
             polylines: map.polylines(),
