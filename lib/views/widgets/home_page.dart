@@ -66,7 +66,7 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
             child: Column(children: [
               const FlightListToolbar(),
               const Expanded(child: SingleChildScrollView(child: FlightList())),
-              SizedBox(height: 0.3*height, child: FlightChart()),
+              SizedBox(height: 0.3*height, child: const FlightChart()),
               ])),
         const Expanded(child: FlutterMapOpentopoPolyline())
       ],
@@ -95,7 +95,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                     child: Column(children: [
                       const FlightListToolbar(),
                       const Expanded(child: SingleChildScrollView(child: FlightList())),
-                      SizedBox(height: 0.2*height, child: FlightChart()),
+                      SizedBox(height: 0.2*height, child: const FlightChart()),
                     ])),
               ],
             ));

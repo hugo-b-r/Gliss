@@ -4,15 +4,15 @@ import 'package:gliding_aid/l10n/app_localizations.dart';
 import 'package:gliding_aid/views/view_models/flight_view_model.dart';
 
 Future<Color> pickColor(BuildContext context, FlightViewModel fl) async {
-  var picker_color = fl.color;
+  var pickerColor = fl.color;
   await showDialog(
       context: context,
       builder: (context) => AlertDialog(
             title: Text(AppLocalizations.of(context)!.pickYourColor),
             content: SingleChildScrollView(
               child: ColorPicker(
-                pickerColor: picker_color,
-                onColorChanged: (color) => {picker_color = color},
+                pickerColor: pickerColor,
+                onColorChanged: (color) => {pickerColor = color},
               ),
             ),
             actions: <Widget>[
@@ -24,5 +24,5 @@ Future<Color> pickColor(BuildContext context, FlightViewModel fl) async {
               ),
             ],
           ));
-  return picker_color;
+  return pickerColor;
 }

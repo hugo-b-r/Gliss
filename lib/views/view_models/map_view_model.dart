@@ -11,9 +11,9 @@ import 'flight_view_model.dart';
 class MapViewModel with ChangeNotifier {
   String _loadedIgcFile = "";
   final List<FlightViewModel> flights = [];
-  MapController? mapController = null;
+  MapController? mapController;
   final double _initialZoom = 7;
-  String? selectedFlight = null;
+  String? selectedFlight;
   LineChartData? lineChartData;
 
   double get initialZoom => _initialZoom;
@@ -74,10 +74,10 @@ class MapViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void centerOnFlight(String flight_name) {
-    FlightViewModel? flight = null;
+  void centerOnFlight(String flightName) {
+    FlightViewModel? flight;
     for (var fl in flights) {
-      if (fl.name == flight_name) {
+      if (fl.name == flightName) {
         flight = fl;
       }
     }

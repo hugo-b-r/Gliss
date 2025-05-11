@@ -3,7 +3,6 @@ this is an igc parsing file
 thanks to https://github.com/marcin-osowski/igc_lib for the help
  */
 
-import 'dart:ui';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
