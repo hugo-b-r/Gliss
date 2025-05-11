@@ -89,7 +89,7 @@ class MapViewModel with ChangeNotifier {
 
   void deleteFlight(String name) {
     flights.removeWhere((fl) => fl.name == name);
-    if (flights.length == 0) {
+    if (flights.isEmpty) {
       lineChartData = LineChartData();
     }
     notifyListeners();
