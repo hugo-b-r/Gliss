@@ -4,6 +4,7 @@ import 'package:gliding_aid/views/widgets/flight_list_toolbar.dart';
 import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../view_models/map_view_model.dart';
 import 'chart.dart';
 
@@ -58,17 +59,12 @@ class HorizontalHomePage extends StatefulWidget {
 class _HorizontalHomePageState extends State<HorizontalHomePage> {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height;
-    return Row(
+    return const Row(
       children: [
         SizedBox(
             width: 442.0,
-            child: Column(children: [
-              const FlightListToolbar(),
-              const Expanded(child: SingleChildScrollView(child: FlightList())),
-              SizedBox(height: 0.3*height, child: const FlightChart()),
-              ])),
-        const Expanded(child: FlutterMapOpentopoPolyline())
+            child: HomeMenu(ratio: 0.4)),
+        Expanded(child: FlutterMapOpentopoPolyline())
       ],
     );
   }
@@ -91,13 +87,39 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                 SizedBox(
                     height: 0.6 * height,
                     child: const Expanded(child: FlutterMapOpentopoPolyline())),
-                Expanded(
-                    child: Column(children: [
-                      const FlightListToolbar(),
-                      const Expanded(child: SingleChildScrollView(child: FlightList())),
-                      SizedBox(height: 0.2*height, child: const FlightChart()),
-                    ])),
+                const Expanded(
+                    child: HomeMenu(ratio: 0.2)),
               ],
             ));
+  }
+}
+
+class HomeMenu extends StatelessWidget {
+  const HomeMenu({
+    super.key,
+    required this.ratio,
+  });
+
+  final double ratio;
+
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    var map = Provider.of<MapViewModel>(context);
+    if (map.flights.isEmpty) {
+      return Center(child:
+      ElevatedButton(
+        onPressed: () async {
+          await map.openIgcFile();
+        },
+        child: Text(AppLocalizations.of(context)!.openFlight),
+      ));
+    } else {
+      return Column(children: [
+        const FlightListToolbar(),
+        const Expanded(child: SingleChildScrollView(child: FlightList())),
+        SizedBox(height: ratio*height, child: const FlightChart()),
+      ]);
+    }
   }
 }

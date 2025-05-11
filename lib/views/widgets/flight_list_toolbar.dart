@@ -11,26 +11,28 @@ class FlightListToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: const EdgeInsets.all(10.0), child: Consumer<MapViewModel>(
-      builder: (context, map, _) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              await map.openIgcFile();
-            },
-            child: Text(AppLocalizations.of(context)!.openFlight),
+    return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Consumer<MapViewModel>(
+          builder: (context, map, _) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await map.openIgcFile();
+                },
+                child: Text(AppLocalizations.of(context)!.openFlight),
+              ),
+              IconButton(
+                iconSize: 24,
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  map.clearFlights();
+                },
+                alignment: Alignment.topRight,
+              ),
+            ],
           ),
-          IconButton(
-            iconSize: 24,
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              map.clearFlights();
-            },
-            alignment: Alignment.topRight,
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }
