@@ -5,10 +5,13 @@ Future<(String, String)> pickFirstFile() async {
   FilePickerResult? result = await FilePicker.platform.pickFiles();
 
   if (result != null) {
-    var name = result.names[0];
-    File file = File(result.files.single.path!);
-    name ??= "";
-    return (await file.readAsString(), name);
+    var name = "";
+    var igcContent = "";
+    for (var file in result.files) {
+      name = file.name;
+      igcContent = await file.xFile.readAsString();
+    }
+    return (igcContent, name);
   } else {
     // User canceled the picker
     throw 'User canceled the picker !';
