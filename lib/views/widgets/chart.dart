@@ -11,7 +11,10 @@ class FlightChart extends StatelessWidget {
     var map = Provider.of<MapViewModel>(context);
     if (map.lineChartData != null) {
       print("using flights linechart !");
-      return Consumer<MapViewModel>(builder: (context, map, _) => LineChart(map.lineChartData!));
+      return Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Consumer<MapViewModel>(
+              builder: (context, map, _) => LineChart(map.lineChartData!)));
     } else {
       return const SizedBox.shrink();
     }
