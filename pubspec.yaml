@@ -37,14 +37,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   # The map
   flutter_map: ^8.1.1
-  flutter_map_cache: ^2.0.0 # this packag
+  flutter_map_cache: ^2.0.0+1 # this packag
   flutter_map_cancellable_tile_provider: ^3.0.0
   latlong2: ^0.9.1
   # caching the tiles
-  path_provider: ^2.1.2
+  path_provider: ^2.1.5
   # drift
   http_cache_drift_store: ^7.0.0
-  sqlite3_flutter_libs: ^0.5.15
   # file loading
   file_picker: ^10.1.9
   geobase: ^1.4.0
@@ -55,6 +54,8 @@ dependencies:
     sdk: flutter
   intl: any
   fl_chart: ^1.0.0
+  dio: ^5.2.0+1
+  dio_cache_interceptor: ^4.0.0
 
 
 dev_dependencies:

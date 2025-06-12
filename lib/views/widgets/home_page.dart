@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/views/widgets/flight_list.dart';
 import 'package:gliding_aid/views/widgets/flight_list_toolbar.dart';
 import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../view_models/map_view_model.dart';
@@ -59,14 +61,39 @@ class HorizontalHomePage extends StatefulWidget {
 class _HorizontalHomePageState extends State<HorizontalHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        SizedBox(
-            width: 442.0,
-            child: HomeMenu(ratio: 0.4)),
-        Expanded(child: FlutterMapOpentopoPolyline())
-      ],
-    );
+    if (kIsWeb) {
+      return const Row(
+        children: [
+          SizedBox(
+              width: 442.0,
+              child: HomeMenu(ratio: 0.4)),
+          Expanded(child: FlutterMapOpentopoPolyline())
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          SizedBox(
+              width: 442.0,
+              child: HomeMenu(ratio: 0.4)),
+          Expanded(child: FutureBuilder(future: getTemporaryDirectory(), builder: (ctx, snapshot) {
+            if (snapshot.hasData) {
+              final dataPath = snapshot.requireData.path;
+              print(dataPath);
+              return FlutterMapOpentopoPolyline(argPath: dataPath);
+            }
+            if (snapshot.hasError) {
+              debugPrint(snapshot.error.toString());
+              debugPrintStack(stackTrace: snapshot.stackTrace);
+              return Expanded(
+                child: Text(snapshot.error.toString()),
+              );
+            }
+            return Text("Hello");
+          }))
+        ],
+      );
+    }
   }
 }
 
