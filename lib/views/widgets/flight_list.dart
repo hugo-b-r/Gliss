@@ -17,7 +17,7 @@ class _FlightListState extends State<FlightList> {
   Widget build(BuildContext context) {
     List<Widget> flights = [];
     var map = Provider.of<MapViewModel>(context);
-    for (var flight in map.flights) {
+    for (var flight in map.flights.values) {
       flights.add(ListTile(
         title: Text(flight.name),
         leading: Row(mainAxisSize: MainAxisSize.min, children: [

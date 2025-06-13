@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/views/view_models/map_view_model.dart';
-import 'package:gliding_aid/views/widgets/home_page.dart';
+import 'package:gliding_aid/Pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 

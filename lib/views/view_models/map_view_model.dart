@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/views/view_models/selected_point_marker.dart';
 
 import '../../data/igc_flight.dart';
 import '../../data/files.dart';
@@ -10,7 +11,8 @@ import 'flight_view_model.dart';
 
 class MapViewModel with ChangeNotifier {
   String _loadedIgcFile = "";
-  final List<FlightViewModel> flights = [];
+  final Map<String, FlightViewModel> flights = {};
+  SelectedPointMarker? selectedPointMarker; // if null, not showed
   MapController? mapController;
   final double _initialZoom = 7;
   String? selectedFlight;
@@ -26,7 +28,7 @@ class MapViewModel with ChangeNotifier {
 
   List<Polyline> polylines() {
     List<Polyline> polylines = [];
-    for (var flight in flights) {
+    for (var flight in flights.values) {
       if (flight.viewable == true) {
         polylines.add(flight.polyline);
       }
@@ -49,7 +51,7 @@ class MapViewModel with ChangeNotifier {
         .withValues(alpha: 1.0);
     var flVm = FlightViewModel(currentFlight, randomColor, 2, name);
 
-    flights.add(flVm);
+    flights[name] = flVm;
 
     setCurrentChartData(flVm);
 
@@ -61,12 +63,7 @@ class MapViewModel with ChangeNotifier {
   }
 
   void updateFlightColor(String n, Color c) {
-    print("entering color update loop");
-    for (var f in flights) {
-      if (f.name == n) {
-        f.setColor(c);
-      }
-    }
+    flights[n]?.setColor(c);
     notifyListeners();
   }
 
@@ -75,20 +72,14 @@ class MapViewModel with ChangeNotifier {
   }
 
   void centerOnFlight(String flightName) {
-    FlightViewModel? flight;
-    for (var fl in flights) {
-      if (fl.name == flightName) {
-        flight = fl;
-      }
-    }
-    if (flight != null && mapController != null) {
-      mapController!.move(flight.boundaries.center, _initialZoom);
-      mapController!.fitCamera(CameraFit.bounds(bounds: flight.boundaries));
+    if (flights[flightName] != null && mapController != null) {
+      mapController!.move(flights[flightName]!.boundaries.center, _initialZoom);
+      mapController!.fitCamera(CameraFit.bounds(bounds: flights[flightName]!.boundaries));
     }
   }
 
   void deleteFlight(String name) {
-    flights.removeWhere((fl) => fl.name == name);
+    flights.remove(name);
     if (flights.isEmpty) {
       lineChartData = LineChartData();
     }

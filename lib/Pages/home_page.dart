@@ -6,9 +6,9 @@ import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../view_models/map_view_model.dart';
-import 'chart.dart';
+import '../l10n/app_localizations.dart';
+import '../views/view_models/map_view_model.dart';
+import '../views/widgets/chart.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -79,7 +79,6 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
           Expanded(child: FutureBuilder(future: getTemporaryDirectory(), builder: (ctx, snapshot) {
             if (snapshot.hasData) {
               final dataPath = snapshot.requireData.path;
-              print(dataPath);
               return FlutterMapOpentopoPolyline(argPath: dataPath);
             }
             if (snapshot.hasError) {
@@ -113,7 +112,20 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
               children: [
                 SizedBox(
                     height: 0.6 * height,
-                    child: const Expanded(child: FlutterMapOpentopoPolyline())),
+                    child: Expanded(child: FutureBuilder(future: getTemporaryDirectory(), builder: (ctx, snapshot) {
+                      if (snapshot.hasData) {
+                        final dataPath = snapshot.requireData.path;
+                        return FlutterMapOpentopoPolyline(argPath: dataPath);
+                      }
+                      if (snapshot.hasError) {
+                        debugPrint(snapshot.error.toString());
+                        debugPrintStack(stackTrace: snapshot.stackTrace);
+                        return Expanded(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      }
+                      return Text("Hello");
+                    }))),
                 const Expanded(
                     child: HomeMenu(ratio: 0.2)),
               ],
