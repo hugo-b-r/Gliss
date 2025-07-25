@@ -87,14 +87,14 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
     if (kIsWeb) {
       return const Row(
         children: [
-          SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4)),
+          HomeMenu(ratio: 0.4),
           Expanded(child: FlutterMapOpentopoPolyline())
         ],
       );
     } else {
       return Row(
         children: [
-          SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4)),
+         HomeMenu(ratio: 0.4),
           Expanded(
               child: FutureBuilder(
                   future: getTemporaryDirectory(),
@@ -134,7 +134,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
         SizedBox(
             height: 0.6 * height,
             child: Expanded(child: FlutterMapOpentopoPolyline())),
-        const Expanded(child: HomeMenu(ratio: 0.2))
+        const HomeMenu(ratio: 0.2)
       ]);
     } else {
       return Consumer<MapViewModel>(
@@ -188,7 +188,7 @@ class _HomeMenuState extends State<HomeMenu> {
     if (map.flights.isEmpty) {
       return const SizedBox.shrink();
     } else {
-      return Column(children: [
+      return SizedBox(width: 442.0, child: Column(children: [
         const Expanded(child: SingleChildScrollView(child: FlightList())),
         Slider(
           value: progression,
@@ -201,7 +201,7 @@ class _HomeMenuState extends State<HomeMenu> {
           },
         ),
         SizedBox(height: widget.ratio * height, child: const FlightChart()),
-      ]);
+      ]));
     }
   }
 }
