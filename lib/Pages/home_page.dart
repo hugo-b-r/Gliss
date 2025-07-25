@@ -64,32 +64,31 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
     if (kIsWeb) {
       return const Row(
         children: [
-          SizedBox(
-              width: 442.0,
-              child: HomeMenu(ratio: 0.4)),
+          SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4)),
           Expanded(child: FlutterMapOpentopoPolyline())
         ],
       );
     } else {
       return Row(
         children: [
-          SizedBox(
-              width: 442.0,
-              child: HomeMenu(ratio: 0.4)),
-          Expanded(child: FutureBuilder(future: getTemporaryDirectory(), builder: (ctx, snapshot) {
-            if (snapshot.hasData) {
-              final dataPath = snapshot.requireData.path;
-              return FlutterMapOpentopoPolyline(argPath: dataPath);
-            }
-            if (snapshot.hasError) {
-              debugPrint(snapshot.error.toString());
-              debugPrintStack(stackTrace: snapshot.stackTrace);
-              return Expanded(
-                child: Text(snapshot.error.toString()),
-              );
-            }
-            return Text("Hello");
-          }))
+          SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4)),
+          Expanded(
+              child: FutureBuilder(
+                  future: getTemporaryDirectory(),
+                  builder: (ctx, snapshot) {
+                    if (snapshot.hasData) {
+                      final dataPath = snapshot.requireData.path;
+                      return FlutterMapOpentopoPolyline(argPath: dataPath);
+                    }
+                    if (snapshot.hasError) {
+                      debugPrint(snapshot.error.toString());
+                      debugPrintStack(stackTrace: snapshot.stackTrace);
+                      return Expanded(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
+                    return Text("Hello");
+                  }))
         ],
       );
     }
@@ -107,29 +106,41 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
-    return Consumer<MapViewModel>(
-        builder: (context, map, _) => Column(
-              children: [
-                SizedBox(
-                    height: 0.6 * height,
-                    child: Expanded(child: FutureBuilder(future: getTemporaryDirectory(), builder: (ctx, snapshot) {
-                      if (snapshot.hasData) {
-                        final dataPath = snapshot.requireData.path;
-                        return FlutterMapOpentopoPolyline(argPath: dataPath);
-                      }
-                      if (snapshot.hasError) {
-                        debugPrint(snapshot.error.toString());
-                        debugPrintStack(stackTrace: snapshot.stackTrace);
-                        return Expanded(
-                          child: Text(snapshot.error.toString()),
-                        );
-                      }
-                      return Text("Hello");
-                    }))),
-                const Expanded(
-                    child: HomeMenu(ratio: 0.2)),
-              ],
-            ));
+    if (kIsWeb) {
+      return Column(children: [
+        SizedBox(
+            height: 0.6 * height,
+            child: Expanded(child: FlutterMapOpentopoPolyline())),
+        const Expanded(child: HomeMenu(ratio: 0.2))
+      ]);
+    } else {
+      return Consumer<MapViewModel>(
+          builder: (context, map, _) => Column(
+                children: [
+                  SizedBox(
+                      height: 0.6 * height,
+                      child: FutureBuilder(
+                              future: getTemporaryDirectory(),
+                              builder: (ctx, snapshot) {
+                                if (snapshot.hasData) {
+                                  final dataPath = snapshot.requireData.path;
+                                  return FlutterMapOpentopoPolyline(
+                                      argPath: dataPath);
+                                }
+                                if (snapshot.hasError) {
+                                  debugPrint(snapshot.error.toString());
+                                  debugPrintStack(
+                                      stackTrace: snapshot.stackTrace);
+                                  return Expanded(
+                                    child: Text(snapshot.error.toString()),
+                                  );
+                                }
+                                return Text("Hello");
+                              })),
+                  const Expanded(child: HomeMenu(ratio: 0.2)),
+                ],
+              ));
+    }
   }
 }
 
@@ -146,8 +157,8 @@ class HomeMenu extends StatelessWidget {
     double height = MediaQuery.sizeOf(context).height;
     var map = Provider.of<MapViewModel>(context);
     if (map.flights.isEmpty) {
-      return Center(child:
-      ElevatedButton(
+      return Center(
+          child: ElevatedButton(
         onPressed: () async {
           await map.openIgcFile();
         },
@@ -157,7 +168,7 @@ class HomeMenu extends StatelessWidget {
       return Column(children: [
         const FlightListToolbar(),
         const Expanded(child: SingleChildScrollView(child: FlightList())),
-        SizedBox(height: ratio*height, child: const FlightChart()),
+        SizedBox(height: ratio * height, child: const FlightChart()),
       ]);
     }
   }
