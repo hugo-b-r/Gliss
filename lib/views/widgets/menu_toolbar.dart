@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/Pages/settings_page.dart';
 import 'package:gliding_aid/views/view_models/map_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 
-class FlightListToolbar extends StatelessWidget {
-  const FlightListToolbar({
+class TopToolbar extends StatelessWidget {
+  const TopToolbar({
     super.key,
   });
 
@@ -28,6 +29,16 @@ class FlightListToolbar extends StatelessWidget {
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   map.clearFlights();
+                },
+                alignment: Alignment.topRight,
+              ),
+              IconButton(
+                iconSize: 24,
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const SettingsPage();
+                  }));
                 },
                 alignment: Alignment.topRight,
               ),

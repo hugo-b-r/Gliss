@@ -914,13 +914,13 @@ class Flight {
 //   }
 // }
 
-  Polyline toPpolyline(double strokeWidth, Color lineColor) {
+  Polyline toPolyline(double strokeWidth, Color lineColor) {
     return Polyline(
         points: points(),
         color: lineColor,
         strokeWidth: strokeWidth,
       borderColor: Colors.white,
-      borderStrokeWidth: 1,
+      borderStrokeWidth: 2,
     );
   }
 

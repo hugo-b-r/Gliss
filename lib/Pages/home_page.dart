@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/views/widgets/flight_list.dart';
-import 'package:gliding_aid/views/widgets/flight_list_toolbar.dart';
+import 'package:gliding_aid/views/widgets/menu_toolbar.dart';
 import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,14 +39,37 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     // we need a layoutbuilder widget https://clouddevs.com/flutter/responsive-design/#:~:text=The%20LayoutBuilder%20widget%20gives%20you,adapt%20to%20different%20screen%20sizes.
     return Scaffold(
-      body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > 900) {
-          return const HorizontalHomePage();
-        } else {
-          return const VerticalHomePage();
-        }
-      }),
+      body: Stack(
+        alignment: Alignment.center, // <---------
+        children: [
+          LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth > 900) {
+              return const HorizontalHomePage();
+            } else {
+              return const VerticalHomePage();
+            }
+          }),
+          Positioned(
+              top: 10,
+              child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(60)),
+                      color: Theme.of(context).colorScheme.surface,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: const Offset(
+                            5.0,
+                            5.0,
+                          ),
+                          blurRadius: 10.0,
+                          spreadRadius: 2.0,
+                        ), //BoxShadow
+                      ]),
+                  child: const TopToolbar())),
+        ],
+      ),
     );
   }
 }
@@ -163,16 +186,9 @@ class _HomeMenuState extends State<HomeMenu> {
     double height = MediaQuery.sizeOf(context).height;
     var map = Provider.of<MapViewModel>(context);
     if (map.flights.isEmpty) {
-      return Center(
-          child: ElevatedButton(
-        onPressed: () async {
-          await map.openIgcFile();
-        },
-        child: Text(AppLocalizations.of(context)!.openFlight),
-      ));
+      return const SizedBox.shrink();
     } else {
       return Column(children: [
-        const FlightListToolbar(),
         const Expanded(child: SingleChildScrollView(child: FlightList())),
         Slider(
           value: progression,

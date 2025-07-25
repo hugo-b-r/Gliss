@@ -39,9 +39,7 @@ class _FlutterMapOpentopoPolylineState
         databaseName: 'DbCacheStore',
       );
       final dio = Dio();
-      return Stack(
-        children: [
-          Consumer<MapViewModel>(
+      return Consumer<MapViewModel>(
               builder: (context, map, _) => FlutterMap(
                 mapController: map.mapController,
                 options: MapOptions(
@@ -81,27 +79,7 @@ class _FlutterMapOpentopoPolylineState
                             'Map data: © OpenStreetMap-Mitwirkende, SRTM | Map display: © OpenTopoMap (CC-BY-SA)')
                       ]),
                 ],
-              )),
-          Positioned(
-              top: 20,
-              right: 20,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: IconButton(
-                    iconSize: 30,
-                    icon:
-                    const Icon(Icons.settings, opticalSize: 48, weight: 400),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return const SettingsPage();
-                      }));
-                    },
-                    alignment: Alignment.topLeft,
-                  ))),
-        ],
+              )
       );
   }
 }

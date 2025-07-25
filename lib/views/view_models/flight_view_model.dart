@@ -16,7 +16,7 @@ class FlightViewModel extends ChangeNotifier {
   FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
     _flight = flight;
     color = c;
-    _pl = _flight.toPpolyline(strokeWidth, color);
+    _pl = _flight.toPolyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
     name = n;
     lineChartData = flight.toLineChartData(color);
@@ -29,7 +29,7 @@ class FlightViewModel extends ChangeNotifier {
   void setColor(Color c) {
     color = c;
     var s = _pl.strokeWidth;
-    _pl = _flight.toPpolyline(s, color);
+    _pl = _flight.toPolyline(s, color);
     lineChartData = _flight.toLineChartData(color);
   }
 
