@@ -35,6 +35,7 @@ class GlidingAid extends StatelessWidget {
           // tested with just a hot reload.
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
           useMaterial3: true,
+          sliderTheme: const SliderThemeData(year2023: false),
         ),
         localizationsDelegates: const [
           AppLocalizations.delegate,

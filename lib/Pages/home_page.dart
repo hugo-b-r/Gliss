@@ -120,23 +120,22 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                   SizedBox(
                       height: 0.6 * height,
                       child: FutureBuilder(
-                              future: getTemporaryDirectory(),
-                              builder: (ctx, snapshot) {
-                                if (snapshot.hasData) {
-                                  final dataPath = snapshot.requireData.path;
-                                  return FlutterMapOpentopoPolyline(
-                                      argPath: dataPath);
-                                }
-                                if (snapshot.hasError) {
-                                  debugPrint(snapshot.error.toString());
-                                  debugPrintStack(
-                                      stackTrace: snapshot.stackTrace);
-                                  return Expanded(
-                                    child: Text(snapshot.error.toString()),
-                                  );
-                                }
-                                return Text("Hello");
-                              })),
+                          future: getTemporaryDirectory(),
+                          builder: (ctx, snapshot) {
+                            if (snapshot.hasData) {
+                              final dataPath = snapshot.requireData.path;
+                              return FlutterMapOpentopoPolyline(
+                                  argPath: dataPath);
+                            }
+                            if (snapshot.hasError) {
+                              debugPrint(snapshot.error.toString());
+                              debugPrintStack(stackTrace: snapshot.stackTrace);
+                              return Expanded(
+                                child: Text(snapshot.error.toString()),
+                              );
+                            }
+                            return Text("Hello");
+                          })),
                   const Expanded(child: HomeMenu(ratio: 0.2)),
                 ],
               ));
@@ -144,13 +143,20 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
   }
 }
 
-class HomeMenu extends StatelessWidget {
+class HomeMenu extends StatefulWidget {
   const HomeMenu({
     super.key,
     required this.ratio,
   });
 
   final double ratio;
+
+  @override
+  State<HomeMenu> createState() => _HomeMenuState();
+}
+
+class _HomeMenuState extends State<HomeMenu> {
+  double progression = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +174,17 @@ class HomeMenu extends StatelessWidget {
       return Column(children: [
         const FlightListToolbar(),
         const Expanded(child: SingleChildScrollView(child: FlightList())),
-        SizedBox(height: ratio * height, child: const FlightChart()),
+        Slider(
+          value: progression,
+          min: 0,
+          max: 100,
+          onChanged: (double value) {
+            setState(() {
+              progression = value;
+            });
+          },
+        ),
+        SizedBox(height: widget.ratio * height, child: const FlightChart()),
       ]);
     }
   }
