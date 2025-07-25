@@ -17,6 +17,7 @@ class MapViewModel with ChangeNotifier {
   final double _initialZoom = 7;
   String? selectedFlight;
   LineChartData? lineChartData;
+  bool widget_ready = false; // to know whether we can use the mapcontroller or not
 
   double get initialZoom => _initialZoom;
 
@@ -55,7 +56,7 @@ class MapViewModel with ChangeNotifier {
 
     setCurrentChartData(flVm);
 
-    if (mapController != null) {
+    if (widget_ready) {
       mapController!.move(flVm.boundaries.center, _initialZoom);
       mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
     }
@@ -73,7 +74,7 @@ class MapViewModel with ChangeNotifier {
   }
 
   void centerOnFlight(String flightName) {
-    if (flights[flightName] != null && mapController != null) {
+    if (flights[flightName] != null && widget_ready) {
       mapController!.move(flights[flightName]!.boundaries.center, _initialZoom);
       mapController!.fitCamera(CameraFit.bounds(bounds: flights[flightName]!.boundaries));
     }
@@ -91,5 +92,13 @@ class MapViewModel with ChangeNotifier {
     selectedFlight = flight.name;
     lineChartData = flight.lineChartData;
     notifyListeners();
+  }
+
+  void isReady() {
+    widget_ready = true;
+  }
+
+  void isNotReady() {
+    widget_ready = false;
   }
 }

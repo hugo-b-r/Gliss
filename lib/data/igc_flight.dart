@@ -914,7 +914,7 @@ class Flight {
 //   }
 // }
 
-  Polyline to_polyline(double strokeWidth, Color lineColor) {
+  Polyline toPpolyline(double strokeWidth, Color lineColor) {
     return Polyline(
         points: points(),
         color: lineColor,

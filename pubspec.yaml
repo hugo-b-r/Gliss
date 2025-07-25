@@ -57,6 +57,8 @@ dependencies:
   fl_chart: ^1.0.0
   dio: ^5.2.0+1
   dio_cache_interceptor: ^4.0.0
+  sqlite3_flutter_libs: ^0.5.37
+
 
 
 dev_dependencies:
