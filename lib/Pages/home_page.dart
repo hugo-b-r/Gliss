@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // we need a layoutbuilder widget https://clouddevs.com/flutter/responsive-design/#:~:text=The%20LayoutBuilder%20widget%20gives%20you,adapt%20to%20different%20screen%20sizes.
     return Scaffold(
       body: Stack(
-        alignment: Alignment.center, // <---------
+        // alignment: Alignment.center, // <---------
         children: [
           LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -52,7 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
           }),
           Positioned(
               top: 10,
+              right: 10,
               child: Container(
+                height: 55,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(60)),
                       color: Theme.of(context).colorScheme.surface,
