@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'l10n/app_localizations.dart';
 
+
 class GlidingAid extends StatelessWidget {
   const GlidingAid({super.key});
 
