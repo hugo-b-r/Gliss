@@ -94,7 +94,7 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
     } else {
       return Row(
         children: [
-         HomeMenu(ratio: 0.4),
+          HomeMenu(ratio: 0.4),
           Expanded(
               child: FutureBuilder(
                   future: getTemporaryDirectory(),
@@ -131,35 +131,49 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
     double height = MediaQuery.sizeOf(context).height;
     if (kIsWeb) {
       return Column(children: [
-        SizedBox(
-            height: 0.6 * height,
-            child: Expanded(child: FlutterMapOpentopoPolyline())),
-        const HomeMenu(ratio: 0.2)
+        FlutterMapOpentopoPolyline(),
+        Consumer<MapViewModel>(
+            builder: (ctx, map, _) => Builder(builder: (ctx) {
+                  if (map.flights.isNotEmpty) {
+                    return SizedBox(
+                        height: 0.4 * height,
+                        child: HomeMenu(ratio: 0.2));
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }))
       ]);
     } else {
       return Consumer<MapViewModel>(
           builder: (context, map, _) => Column(
                 children: [
-                  SizedBox(
-                      height: 0.6 * height,
-                      child: FutureBuilder(
-                          future: getTemporaryDirectory(),
-                          builder: (ctx, snapshot) {
-                            if (snapshot.hasData) {
-                              final dataPath = snapshot.requireData.path;
-                              return FlutterMapOpentopoPolyline(
-                                  argPath: dataPath);
-                            }
-                            if (snapshot.hasError) {
-                              debugPrint(snapshot.error.toString());
-                              debugPrintStack(stackTrace: snapshot.stackTrace);
-                              return Expanded(
-                                child: Text(snapshot.error.toString()),
-                              );
-                            }
-                            return Text("Hello");
-                          })),
-                  const Expanded(child: HomeMenu(ratio: 0.2)),
+                  Expanded(child: FutureBuilder(
+                      future: getTemporaryDirectory(),
+                      builder: (ctx, snapshot) {
+                        if (snapshot.hasData) {
+                          final dataPath = snapshot.requireData.path;
+                          return FlutterMapOpentopoPolyline(
+                              argPath: dataPath);
+                        }
+                        if (snapshot.hasError) {
+                          debugPrint(snapshot.error.toString());
+                          debugPrintStack(stackTrace: snapshot.stackTrace);
+                          return Expanded(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        }
+                        return Text("Hello");
+                      })),
+                  Consumer<MapViewModel>(
+                      builder: (ctx, map, _) => Builder(builder: (ctx) {
+                        if (map.flights.isNotEmpty) {
+                          return SizedBox(
+                              height: 0.4 * height,
+                              child: HomeMenu(ratio: 0.2));
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      }))
                 ],
               ));
     }
@@ -188,20 +202,22 @@ class _HomeMenuState extends State<HomeMenu> {
     if (map.flights.isEmpty) {
       return const SizedBox.shrink();
     } else {
-      return SizedBox(width: 442.0, child: Column(children: [
-        const Expanded(child: SingleChildScrollView(child: FlightList())),
-        Slider(
-          value: progression,
-          min: 0,
-          max: 100,
-          onChanged: (double value) {
-            setState(() {
-              progression = value;
-            });
-          },
-        ),
-        SizedBox(height: widget.ratio * height, child: const FlightChart()),
-      ]));
+      return SizedBox(
+          width: 442.0,
+          child: Column(children: [
+            const Expanded(child: SingleChildScrollView(child: FlightList())),
+            Slider(
+              value: progression,
+              min: 0,
+              max: 100,
+              onChanged: (double value) {
+                setState(() {
+                  progression = value;
+                });
+              },
+            ),
+            SizedBox(height: widget.ratio * height, child: const FlightChart()),
+          ]));
     }
   }
 }
