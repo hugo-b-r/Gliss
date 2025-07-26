@@ -65,7 +65,7 @@ class MapViewModel with ChangeNotifier {
 
   void updateFlightColor(String n, Color c) {
     flights[n]?.setColor(c);
-    setCurrentChartData(flights[selectedFlight]);
+    setCurrentChartData(flights[selectedFlight]!);
     notifyListeners();
   }
 
@@ -88,9 +88,9 @@ class MapViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setCurrentChartData(flight) {
+  void setCurrentChartData(FlightViewModel flight) {
     selectedFlight = flight.name;
-    lineChartData = flight.lineChartData;
+    lineChartData = LineChartData(lineBarsData: [flight.toLineCHartBarData()]);
     notifyListeners();
   }
 

@@ -11,7 +11,6 @@ class FlightViewModel extends ChangeNotifier {
   late LatLngBounds _boundaries;
   bool viewable = true;
   Color color = Colors.red;
-  late LineChartData lineChartData;
 
   FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
     _flight = flight;
@@ -19,7 +18,6 @@ class FlightViewModel extends ChangeNotifier {
     _pl = _flight.toPolyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
     name = n;
-    lineChartData = flight.toLineChartData(color);
   }
 
   Polyline get polyline => _pl;
@@ -30,11 +28,28 @@ class FlightViewModel extends ChangeNotifier {
     color = c;
     var s = _pl.strokeWidth;
     _pl = _flight.toPolyline(s, color);
-    lineChartData = _flight.toLineChartData(color);
   }
 
   void toggleViewable() {
     viewable = !viewable;
     notifyListeners();
+  }
+
+  LineChartBarData toLineCHartBarData() {
+    List<FlSpot> spots = [];
+    for (var fix in _flight.fixes) {
+      spots.add(FlSpot(fix.rawtime, fix.gnss_alt));
+    }
+    var lcb = LineChartBarData(
+          isCurved: true,
+          color: color,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+
+          spots: spots,
+        );
+    return lcb;
   }
 }

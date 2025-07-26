@@ -9,11 +9,13 @@ class FlightChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var map = Provider.of<MapViewModel>(context);
+
+    //showing only if there is data to show
     if (map.lineChartData != null) {
       return Padding(
           padding: EdgeInsets.all(10.0),
           child: Consumer<MapViewModel>(
-              builder: (context, map, _) => LineChart(map.lineChartData!)));
+              builder: (context, map, _) => LineChart(map.lineChartData!, )));
     } else {
       return const SizedBox.shrink();
     }

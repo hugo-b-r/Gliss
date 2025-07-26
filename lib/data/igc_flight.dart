@@ -931,24 +931,4 @@ class Flight {
     }
     return points;
   }
-
-  LineChartData toLineChartData(Color c) {
-    List<FlSpot> spots = [];
-    for (var fix in fixes) {
-      spots.add(FlSpot(fix.rawtime, fix.gnss_alt));
-    }
-    var lc = LineChartData(
-      lineBarsData: [LineChartBarData(
-        isCurved: true,
-        color: c,
-        barWidth: 2,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-
-      spots: spots,
-      ),
-    ]);
-    return lc;
-  }
 }
