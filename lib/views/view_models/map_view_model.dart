@@ -17,7 +17,7 @@ class MapViewModel with ChangeNotifier {
   final double _initialZoom = 7;
   String? selectedFlight;
   LineChartData? lineChartData;
-  bool widget_ready =
+  bool widgetReady =
       false; // to know whether we can use the mapcontroller or not
 
   double get initialZoom => _initialZoom;
@@ -39,8 +39,8 @@ class MapViewModel with ChangeNotifier {
   }
 
   Future<void> openIgcFile() async {
-    var name = "";
-    var file;
+    String name = "";
+    String file;
     try {
       (file, name) = await pickFirstFile();
       _loadedIgcFile = file;
@@ -48,7 +48,7 @@ class MapViewModel with ChangeNotifier {
       throw Exception(e);
     }
     var currentFlight =
-        Flight.create_from_file(_loadedIgcFile, FlightParsingConfig());
+        Flight.createFromFile(_loadedIgcFile, FlightParsingConfig());
     Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
         .withValues(alpha: 1.0);
     var flVm = FlightViewModel(currentFlight, randomColor, 4, name);
@@ -57,7 +57,7 @@ class MapViewModel with ChangeNotifier {
 
     setCurrentChartData(flVm);
 
-    if (widget_ready) {
+    if (widgetReady) {
       mapController!.move(flVm.boundaries.center, _initialZoom);
       mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
     }
@@ -75,7 +75,7 @@ class MapViewModel with ChangeNotifier {
   }
 
   void centerOnFlight(String flightName) {
-    if (flights[flightName] != null && widget_ready) {
+    if (flights[flightName] != null && widgetReady) {
       mapController!.move(flights[flightName]!.boundaries.center, _initialZoom);
       mapController!
           .fitCamera(CameraFit.bounds(bounds: flights[flightName]!.boundaries));
@@ -132,10 +132,10 @@ class MapViewModel with ChangeNotifier {
   }
 
   void isReady() {
-    widget_ready = true;
+    widgetReady = true;
   }
 
   void isNotReady() {
-    widget_ready = false;
+    widgetReady = false;
   }
 }

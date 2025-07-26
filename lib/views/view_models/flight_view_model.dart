@@ -38,7 +38,7 @@ class FlightViewModel extends ChangeNotifier {
   LineChartBarData toLineChartBarData() {
     List<FlSpot> spots = [];
     for (var fix in _flight.fixes) {
-      spots.add(FlSpot(fix.rawtime, fix.gnss_alt));
+      spots.add(FlSpot(fix.rawtime, fix.gnssAlt));
     }
     var lcb = LineChartBarData(
           isCurved: true,
