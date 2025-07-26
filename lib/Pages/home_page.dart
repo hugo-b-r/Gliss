@@ -6,7 +6,6 @@ import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../l10n/app_localizations.dart';
 import '../views/view_models/map_view_model.dart';
 import '../views/widgets/chart.dart';
 

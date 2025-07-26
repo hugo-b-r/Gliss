@@ -18,7 +18,7 @@ import 'package:xml/xml.dart';
 
 /// Returns:
 ///     A string, where non-printable characters are removed.
-String _strip_non_printable_chars(String strNonStrip) {
+String _stripNonPrintableChars(String strNonStrip) {
   var clean = strNonStrip.replaceAll(RegExp(r'[^A-Za-z0-9().,;?]'), ' ');
   return clean;
 }
@@ -33,7 +33,7 @@ class Turnpoint {
   }
 
   /// Checks wether a fix is in the turnpoint or not
-  bool in_radius(Geographic fix) {
+  bool inRadius(Geographic fix) {
     double distance = fix.distanceTo2D(pos);
     return distance <= radius;
   }
@@ -43,25 +43,21 @@ class Task {
   List<Turnpoint> turnpoints = [];
 
   /// Raw time (seconds past midnight). The time after which pilots can start.
-  int start_time = 0;
+  int startTime = 0;
 
   /// Raw time (seconds past midnight). The time after which the race must have been finished.
-  int end_time = 0;
+  int endTime = 0;
 
-  Task(List<Turnpoint> turnpoints, int start_time, int end_time) {
-    this.turnpoints = turnpoints;
-    this.start_time = start_time;
-    this.end_time = end_time;
-  }
+  Task(this.turnpoints, this.startTime, this.endTime);
 
   /// Creates a task from a LK8000 task. Format seems to also be used by XCSoar.
-  Task.create_from_lkt_file(String filecontent) {
-    XmlDocument DOMTree = XmlDocument.parse(filecontent);
+  Task.createFromLktFile(String filecontent) {
+    XmlDocument domTree = XmlDocument.parse(filecontent);
 
     // hwat if these tags are missing ?
-    var taskpoints = DOMTree.findElements("taskpoints").first;
-    var waypoints = DOMTree.findElements("waypoints").first;
-    var gate = DOMTree.findElements("time-gate").first;
+    var taskpoints = domTree.findElements("taskpoints").first;
+    var waypoints = domTree.findElements("waypoints").first;
+    var gate = domTree.findElements("time-gate").first;
     List<XmlElement> tpoints = List.from(taskpoints.findElements("point"));
     List<XmlElement> wpoints = List.from(waypoints.findElements("point"));
     String startTimeHm = gate.getAttribute("open-time") ?? "00:00";
@@ -113,8 +109,8 @@ class Task {
       turnpoints.add(turnpoint);
     }
     turnpoints = turnpoints;
-    start_time = startTime;
-    end_time = endTime;
+    startTime = startTime;
+    endTime = endTime;
   }
 }
 
@@ -126,23 +122,23 @@ class GNSSFix {
   ///   lat: a float, latitude in degrees
   ///   lon: a float, longitude in degrees
   ///   validity: a string, GPS validity information from flight recorder
-  ///   press_alt: a float, pressure altitude, meters
-  ///   gnss_alt: a float, GNSS altitude, meters
+  ///   pressAlt: a float, pressure altitude, meters
+  ///   gnssAlt: a float, GNSS altitude, meters
   ///   extras: a string, B record extensions
 
   double rawtime = 0;
   double lat = 0;
   double lon = 0;
   String validity = "";
-  double press_alt = 0;
-  double gnss_alt = 0;
+  double pressAlt = 0;
+  double gnssAlt = 0;
   String extras = "";
   Flight? flight;
 
   /// Derived attributes:
   ///   index: an integer, the position of the fix in the IGC file
   ///   timestamp: a float, true timestamp (since epoch), UTC, seconds
-  ///   alt: a float, either press_alt or gnss_alt
+  ///   alt: a float, either pressAlt or gnssAlt
   ///   gsp: a float, current ground speed, km/h
   ///   bearing: a float, aircraft bearing, in degrees
   ///   bearing_change_rate: a float, bearing change rate, degrees/second
@@ -154,19 +150,12 @@ class GNSSFix {
   double alt = 0.0;
   double gsp = 0;
   double bearing = 0;
-  double bearing_change_rate = 0;
+  double bearingChangeRate = 0;
   bool flying = false;
   bool circling = false;
 
-  GNSSFix(double rawtime, double lat, double lon, String validity,
-      double press_alt, double gnss_alt, String extras) {
-    this.rawtime = rawtime;
-    this.lat = lat;
-    this.lon = lon;
-    this.validity = validity;
-    this.press_alt = press_alt;
-    this.gnss_alt = gnss_alt;
-    this.extras = extras;
+  GNSSFix(this.rawtime, this.lat, this.lon, this.validity,
+      this.pressAlt, this.gnssAlt, this.extras) {
     flight = null;
 
     index = 0;
@@ -174,15 +163,15 @@ class GNSSFix {
     alt = 0.0;
     gsp = 0;
     bearing = 0;
-    bearing_change_rate = 0;
+    bearingChangeRate = 0;
     flying = false;
     circling = false;
   }
 
-  GNSSFix.build_from_B_record(String B_record_line, int index) {
+  GNSSFix.buildFromBRecord(String bRrecordLine, int index) {
     var regexp = RegExp(
         r"^B(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d\d)([NS])(\d\d\d)(\d\d)(\d\d\d)([EW])([AV])([-\d]\d\d\d\d)([-\d]\d\d\d\d)([0-9a-zA-Z\-]*).*$");
-    var match = regexp.firstMatch(B_record_line)!;
+    var match = regexp.firstMatch(bRrecordLine)!;
     //https://api.dart.dev/dart-core/Match/groups.html
     var hours = match.group(1)!;
     var minutes = match.group(2)!;
@@ -199,8 +188,8 @@ class GNSSFix {
     var lonSign = match.group(11)!;
 
     // var validity = match.group(12)!;
-    var pressAlt = match.group(13)!;
-    var gnssAlt = match.group(14)!;
+    var pressAltStr = match.group(13)!;
+    var gnssAltStr = match.group(14)!;
 
     // var extras = match.group(15)!;
 
@@ -221,57 +210,57 @@ class GNSSFix {
       lon = -lon;
     }
 
-    press_alt = double.parse(pressAlt);
-    gnss_alt = double.parse(gnssAlt);
+    pressAlt = double.parse(pressAltStr);
+    gnssAlt = double.parse(gnssAltStr);
   }
 
   /// Set parents flight object
-  void set_flight(Flight flight) {
+  void setFlight(Flight flight) {
     this.flight = flight;
-    if (this.flight?.alt_source == "PRESS") {
-      alt = press_alt;
-    } else if (this.flight?.alt_source == "GNSS") {
-      alt = gnss_alt;
+    if (this.flight?.altSource == "PRESS") {
+      alt = pressAlt;
+    } else if (this.flight?.altSource == "GNSS") {
+      alt = gnssAlt;
     } else {
       throw 'WrongAltSourceType';
     }
 
-    if (flight.date_timestamp != null) {
-      timestamp = rawtime + flight.date_timestamp!;
+    if (flight.dateTimestamp != null) {
+      timestamp = rawtime + flight.dateTimestamp!;
     } else {
       timestamp = rawtime;
     }
   }
 
   /*String toString() {
-    return ("GNSSFix(rawtime=%02d:%02d:%02d, lat=%f, lon=%f, press_alt=%.1f, gnss_alt=%.1f)")
+    return ("GNSSFix(rawtime=%02d:%02d:%02d, lat=%f, lon=%f, pressAlt=%.1f, gnssAlt=%.1f)")
   }*/
 
-  Geographic to_geographic() {
+  Geographic toGeographic() {
     return Geographic(lon: lon, lat: lat);
   }
 
   /// Computes bearing in degrees to another GNSSFix
   /// https://pub.dev/documentation/geobase/latest/geobase/EllipsoidalVincenty-class.html
-  double bearing_to(GNSSFix other) {
-    var geographic = to_geographic();
+  double bearingTo(GNSSFix other) {
+    var geographic = toGeographic();
     // Creates a vincenty calculation object
     var vincenty = EllipsoidalVincenty(geographic);
-    return vincenty.finalBearingTo(other.to_geographic());
+    return vincenty.finalBearingTo(other.toGeographic());
   }
 
   /// computes distance to another fix
-  double distance_to(GNSSFix other) {
-    var geographic = to_geographic();
+  double distanceTo(GNSSFix other) {
+    var geographic = toGeographic();
     // Creates a vincenty calculation object
     var vincenty = EllipsoidalVincenty(geographic);
     return vincenty
-        .inverse(other.to_geographic())
+        .inverse(other.toGeographic())
         .distance; // distance in meters
   }
 
   /// Reconstructs a B record
-  String to_B_record() {
+  String toBRecord() {
     var hours = rawtime / 3600;
     var minutes = (rawtime % 3600) / 60;
     var seconds = rawtime % 60;
@@ -306,8 +295,8 @@ class GNSSFix {
     var lonMinDec = lon % 1000;
 
     var validity = this.validity;
-    var pressAlt = press_alt.toInt();
-    var gnssAlt = gnss_alt.toInt();
+    var pressAltInt = pressAlt.toInt();
+    var gnssAltInt = gnssAlt.toInt();
 
     return 'B${hours.toString().padLeft(2, '0')}'
         '${minutes.toString().padLeft(2, '0')}${seconds.toString().padLeft(2, '0')}'
@@ -316,11 +305,11 @@ class GNSSFix {
         '${lonDeg.toString().padLeft(2, '0')}${lonMin.toString().padLeft(2, '0')}'
         '${lonMinDec.toString().padLeft(3, '0')}$lonSign'
         '$validity'
-        '${pressAlt.toString().padLeft(5, '0')}${gnssAlt.toString().padLeft(5, '0')}'
+        '${pressAltInt.toString().padLeft(5, '0')}${gnssAltInt.toString().padLeft(5, '0')}'
         '$extras';
   }
 
-  LatLng to_lat_lng() {
+  LatLng toLatLng() {
     return LatLng(lat, lon);
   }
 }
@@ -335,27 +324,27 @@ class Thermal {
 
   ///  exit_fix: a GNSSFix, exit_point of the thermal
 
-  Thermal(GNSSFix enter_fix, GNSSFix exit_fix) {
-    enterFix = enter_fix;
-    exitFix = exit_fix;
+  Thermal(GNSSFix enterFix, GNSSFix exitFix) {
+    enterFix = enterFix;
+    exitFix = exitFix;
   }
 
   /// Returns the time spent in the thermal in seconds
-  double time_change() {
+  double timeChange() {
     return exitFix.rawtime - enterFix.rawtime;
   }
 
   /// Retturns the altitude ained/lost in the thermal in meters
-  double alt_change() {
+  double altChange() {
     return exitFix.alt - enterFix.alt;
   }
 
   /// Returns average velocity in the thermal in m/s
-  double vertical_velocity() {
-    if (time_change().abs() < 1e-7) {
+  double verticalVelocity() {
+    if (timeChange().abs() < 1e-7) {
       return 0.0;
     }
-    return alt_change() / time_change();
+    return altChange() / timeChange();
   }
 }
 
@@ -371,37 +360,37 @@ class Glide {
   ///     track between the entry point and the exit point, note that this is not
   ///     the same as he distance between these points
 
-  GNSSFix enter_fix = GNSSFix(0, 0, 0, "0", 0, 0, "0");
-  GNSSFix exit_fix = GNSSFix(0, 0, 0, "0", 0, 0, "0");
-  double track_length = 0;
+  GNSSFix enterFix = GNSSFix(0, 0, 0, "0", 0, 0, "0");
+  GNSSFix exitFix = GNSSFix(0, 0, 0, "0", 0, 0, "0");
+  double trackLength = 0;
 
-  Glide(GNSSFix enter_fix, GNSSFix exit_fix, double track_length) {
-    this.enter_fix = enter_fix;
-    this.exit_fix = exit_fix;
-    this.track_length = track_length;
+  Glide(GNSSFix enterFix, GNSSFix exitFix, double trackLength) {
+    enterFix = enterFix;
+    exitFix = exitFix;
+    trackLength = trackLength;
   }
 
   /// Returns the time spent in the glide, seconds.
-  double time_change() {
-    return exit_fix.timestamp - enter_fix.timestamp;
+  double timeChange() {
+    return exitFix.timestamp - enterFix.timestamp;
   }
 
   /// Returns the average speed in the glide, km/h.
   double speed() {
-    return track_length / (time_change() / 3600);
+    return trackLength / (timeChange() / 3600);
   }
 
   /// Return the overall altitude change in the glide, meters.
-  double alt_change() {
-    return exit_fix.alt - enter_fix.alt;
+  double altChange() {
+    return exitFix.alt - enterFix.alt;
   }
 
   /// Returns the L/D of the glide.
-  double glide_ratio() {
-    if (alt_change().abs() < 1e-7) {
+  double glideRatio() {
+    if (altChange().abs() < 1e-7) {
       return 0;
     }
-    return track_length * 1000 / alt_change();
+    return trackLength * 1000 / altChange();
   }
 }
 
@@ -413,51 +402,51 @@ class FlightParsingConfig extends Object {
 
   // Flight validation parameters.
   // Minimum number of fixes in a file.
-  var min_fixes = 50;
+  var minFixes = 50;
 
   // Maximum time between fixes, seconds.
   // Soft limit, some fixes are allowed to exceed.
-  var max_seconds_between_fixes = 50.0;
+  var maxSecondsBetweenFixes = 50.0;
 
   // Minimum time between fixes, seconds.
   // Soft limit, some fixes are allowed to exceed.
-  var min_seconds_between_fixes = 1.0;
+  var miSecondsBetweenFixes = 1.0;
 
   // Maximum number of fixes exceeding time between fix constraints.
-  var max_time_violations = 10;
+  var maxTimeViolations = 10;
 
   // Maximum number of times a file can cross the 0:00 UTC time.
-  var max_new_days_in_flight = 2;
+  var maxNewDaysInFlight = 2;
 
   // Minimum average of absolute values of altitude changes in a file.
   // This is needed to discover altitude sensors (either pressure or
   // gps) that report either always constant altitude, or almost
   // always constant altitude, and therefore are invalid. The unit
   // is meters/fix.
-  var min_avg_abs_alt_change = 0.01;
+  var minAvgAbsAltChange = 0.01;
 
   // Maximum altitude change per second between fixes, meters per second.
   // Soft limit, some fixes are allowed to exceed.
-  var max_alt_change_rate = 50.0;
+  var maxAltChangeRate = 50.0;
 
   // Maximum number of fixes that exceed the altitude change limit.
-  var max_alt_change_violations = 3;
+  var maxAltChangeViolations = 3;
 
   // Absolute maximum altitude, meters.
-  var max_alt = 10000.0;
+  var maxAlt = 10000.0;
 
   // Absolute minimum altitude, meters.
-  var min_alt = -600.0;
+  var minAlt = -600.0;
 
   // Flight detection parameters.
 
   // Minimum ground speed to switch to flight mode, km/h.
-  var min_gsp_flight = 15.0;
+  var minGspFlight = 15.0;
 
   // Minimum idle time (i.e. time with speed below min_gsp_flight) to switch
   // to landing, seconds. Exception: end of the file (tail fixes that
   // do not trigger the above condition), no limit is applied there.
-  var min_landing_time = 5.0 * 60.0;
+  var minLandingTime = 5.0 * 60.0;
 
   // In case there are multiple continuous segments with ground
   // speed exceeding the limit, which one should be taken?
@@ -466,19 +455,19 @@ class FlightParsingConfig extends Object {
   // the first detected landing.
   // - "concat": concatenate all segments; will include the down
   // periods between segments (legacy behavior)
-  var which_flight_to_pick = "concat";
+  var whichFlightToPick = "concat";
 
   // Thermal detection parameters.
 
   // Minimum bearing change to enter a thermal, deg/sec.
-  var min_bearing_change_circling = 6.0;
+  var minBearingChangeCircling = 6.0;
 
   // Minimum time between fixes to calculate bearing change, seconds.
   // See the usage for a more detailed comment on why this is useful.
-  var min_time_for_bearing_change = 5.0;
+  var minTimeForBearingChange = 5.0;
 
   // Minimum time to consider circling a thermal, seconds.
-  var min_time_for_thermal = 60.0;
+  var minTimeForThermal = 60.0;
 }
 
 class Flight {
@@ -514,33 +503,33 @@ class Flight {
   /// Other attributes:
   ///     alt_source: a string, the chosen altitude sensor,
   ///     either "PRESS" or "GNSS"
-  ///     press_alt_valid: a bool, whether the pressure altitude sensor is OK
-  ///     gnss_alt_valid: a bool, whether the GNSS altitude sensor is OK
+  ///     pressAlt_valid: a bool, whether the pressure altitude sensor is OK
+  ///     gnssAlt_valid: a bool, whether the GNSS altitude sensor is OK
 
   bool valid = true;
   List<String> notes = [];
   List<GNSSFix> fixes = [];
   List<Thermal> thermals = [];
   List<Glide> glides = [];
-  GNSSFix takeoff_fix = GNSSFix(0, 0, 0, "", 0, 0, "");
-  GNSSFix landing_fix = GNSSFix(0, 0, 0, "", 0, 0, "");
+  GNSSFix takeoffFix = GNSSFix(0, 0, 0, "", 0, 0, "");
+  GNSSFix landingFix = GNSSFix(0, 0, 0, "", 0, 0, "");
 
-  String glider_type = "";
-  String competition_class = "";
-  String fr_manuf_code = "";
-  String fr_uniq_id = "";
-  String i_record = "";
-  String fr_firmware_version = "";
-  String fr_hardware_version = "";
-  String fr_recorder_type = "";
-  String fr_gps_receiver = "";
-  String fr_pressure_sensor = "";
+  String gliderType = "";
+  String competitionClass = "";
+  String frManufCode = "";
+  String frUniqId = "";
+  String iRecord = "";
+  String frFirmwareVersion = "";
+  String frHardwareVersion = "";
+  String frRecorderType = "";
+  String frGpsReceiver = "";
+  String frPressureSensor = "";
 
-  String alt_source = "";
-  bool press_alt_valid = true;
-  bool gnss_alt_valid = true;
+  String altSource = "";
+  bool pressAltValid = true;
+  bool gnssAltValid = true;
 
-  int? date_timestamp = 0;
+  int? dateTimestamp = 0;
 
   FlightParsingConfig _config = FlightParsingConfig();
 
@@ -552,7 +541,7 @@ class Flight {
 
   ///       Returns:
   ///           An instance of Flight built from the supplied IGC file.
-  static Flight create_from_file(String file, FlightParsingConfig config) {
+  static Flight createFromFile(String file, FlightParsingConfig config) {
     List<GNSSFix> fixes = [];
     List<String> aRecords = [];
     List<String> iRecords = [];
@@ -563,7 +552,7 @@ class Flight {
         if (line[0] == 'A') {
           aRecords.add(line);
         } else if (line[0] == 'B') {
-          var fix = GNSSFix.build_from_B_record(line, fixes.length);
+          var fix = GNSSFix.buildFromBRecord(line, fixes.length);
           if (fixes.isEmpty ||
               (fix.rawtime - fixes[fixes.length - 1].rawtime).abs() > 1e-5) {
             // The time did change since the previous fix -> do not ignore it
@@ -583,49 +572,48 @@ class Flight {
   }
 
   /// Initializer of the Flight class. Not meant to be directly used
-  Flight(List<GNSSFix> fixes, List<String> a_records, List<String> h_records,
-      List<String> i_records, FlightParsingConfig config) {
+  Flight(this.fixes, List<String> aRecords, List<String> hRecords,
+      List<String> iRecords, FlightParsingConfig config) {
     _config = config;
-    this.fixes = fixes;
     valid = true;
     notes = [];
-    if (fixes.length < _config.min_fixes) {
+    if (fixes.length < _config.minFixes) {
       notes.add("Error : This file has ${fixes.length}, less than "
-          "the minimum ${_config.min_fixes}");
+          "the minimum ${_config.minFixes}");
       valid = false;
       return;
     }
 
-    _check_altitudes();
+    _checkAltitudes();
     if (!valid) {
       return;
     }
 
-    _check_fix_rawtime();
+    _checkFixRawtime();
     if (!valid) {
       return;
     }
 
-    if (press_alt_valid) {
-      alt_source = "PRESS";
-    } else if (gnss_alt_valid) {
-      alt_source = "GNSS";
+    if (pressAltValid) {
+      altSource = "PRESS";
+    } else if (gnssAltValid) {
+      altSource = "GNSS";
     } else {
       notes.add("Error : neither pressure nor gnss altitude is valid.");
       valid = false;
       return;
     }
 
-    if (a_records.isNotEmpty) {
-      _parse_a_records(a_records);
+    if (aRecords.isNotEmpty) {
+      _parseARecords(aRecords);
     }
 
-    if (i_records.isNotEmpty) {
-      _parse_i_records(i_records);
+    if (iRecords.isNotEmpty) {
+      _parseIRecords(iRecords);
     }
 
-    if (h_records.isNotEmpty) {
-      _parse_h_records(h_records);
+    if (hRecords.isNotEmpty) {
+      _parseHRecords(hRecords);
     }
   }
 
@@ -633,16 +621,16 @@ class Flight {
 
   ///       A record contains the flight recorder manufacturer ID and
   ///       device unique ID.
-  void _parse_a_records(List<String> aRecords) {
-    fr_manuf_code = _strip_non_printable_chars(aRecords[0].substring(1, 4));
-    fr_uniq_id = _strip_non_printable_chars(aRecords[0].substring(4, 7));
+  void _parseARecords(List<String> aRecords) {
+    frManufCode = _stripNonPrintableChars(aRecords[0].substring(1, 4));
+    frUniqId = _stripNonPrintableChars(aRecords[0].substring(4, 7));
   }
 
   /// Parses the IGC I records.
 
   ///       I records contain a description of extensions used in B records.
-  void _parse_i_records(List<String> iRecords) {
-    i_record = _strip_non_printable_chars(iRecords.join(" "));
+  void _parseIRecords(List<String> iRecords) {
+    iRecord = _stripNonPrintableChars(iRecords.join(" "));
   }
 
   /// Parses the IGC H records.
@@ -651,27 +639,27 @@ class Flight {
   ///       about the file, such as the date of the flight, name of the pilot,
   ///       glider type, competition class, recorder accuracy and more.
   ///       Consult the IGC manual for details.
-  void _parse_h_records(List<String> hRecords) {
+  void _parseHRecords(List<String> hRecords) {
     for (var record in hRecords) {
-      _parse_h_record(record);
+      _parseHRecord(record);
     }
   }
 
-  void _parse_h_record(String record) {
+  void _parseHRecord(String record) {
     if (record.substring(0, 5) == "HFDTE") {
       var match = RegExp('(?:HFDTE|HFDTEDATE:[ ]*)(dd)(dd)(dd)',
           caseSensitive: false);
       if (match.hasMatch(record)) {
         List<String> date = [];
         for (var group in match.allMatches(record)) {
-          date.add(_strip_non_printable_chars(group[0]!));
+          date.add(_stripNonPrintableChars(group[0]!));
         }
         var year = int.parse(date[0]);
         var month = int.parse(date[1]);
         var day = int.parse(date[2]);
         if (1 <= month && month <= 12 && 1 <= day && day <= 31) {
           var date = DateTime.utc(year, month, day);
-          date_timestamp = (date.millisecondsSinceEpoch / 1000).toInt();
+          dateTimestamp = (date.millisecondsSinceEpoch / 1000).toInt();
         }
       }
     } else if (record.substring(0, 5) == "HFGTY") {
@@ -680,7 +668,7 @@ class Flight {
       if (match.hasMatch(record)) {
         var match1 = match.firstMatch(record);
         if (match1 != null) {
-          glider_type = _strip_non_printable_chars(match1[0]!);
+          gliderType = _stripNonPrintableChars(match1[0]!);
         }
       }
     } else if (record.substring(0, 5) == "HFRFW" ||
@@ -690,7 +678,7 @@ class Flight {
       if (match.hasMatch(record)) {
         var match1 = match.firstMatch(record);
         if (match1 != null) {
-          fr_firmware_version = _strip_non_printable_chars(match1[0]!);
+          frFirmwareVersion = _stripNonPrintableChars(match1[0]!);
         }
       }
 
@@ -699,7 +687,7 @@ class Flight {
       if (match.hasMatch(record)) {
         var match3 = match.firstMatch(record);
         if (match3 != null) {
-          fr_hardware_version = _strip_non_printable_chars(match3[0]!);
+          frHardwareVersion = _stripNonPrintableChars(match3[0]!);
         }
       }
     } else if (record.substring(0, 5) == "HFFTY") {
@@ -708,7 +696,7 @@ class Flight {
       if (match.hasMatch(record)) {
         var match1 = match.firstMatch(record);
         if (match1 != null) {
-          fr_recorder_type = _strip_non_printable_chars(match1[0]!);
+          frRecorderType = _stripNonPrintableChars(match1[0]!);
         }
       }
     } else if (record.substring(0, 5) == "HFGPS") {
@@ -716,7 +704,7 @@ class Flight {
       if (match.hasMatch(record)) {
         var match1 = match.firstMatch(record);
         if (match1 != null) {
-          fr_gps_receiver = _strip_non_printable_chars(match1[0]!);
+          frGpsReceiver = _stripNonPrintableChars(match1[0]!);
         }
       }
     } else if (record.substring(0, 5) == "HFPRS") {
@@ -725,7 +713,7 @@ class Flight {
       if (match.hasMatch(record)) {
         var match1 = match.firstMatch(record);
         if (match1 != null) {
-          fr_pressure_sensor = _strip_non_printable_chars(match1[0]!);
+          frPressureSensor = _stripNonPrintableChars(match1[0]!);
         }
       }
     } else if (record.substring(0, 5) == "HFCCL") {
@@ -734,13 +722,13 @@ class Flight {
       if (match.hasMatch(record)) {
         var match1 = match.firstMatch(record);
         if (match1 != null) {
-          competition_class = _strip_non_printable_chars(match1[0]!);
+          competitionClass = _stripNonPrintableChars(match1[0]!);
         }
       }
     }
   }
 
-  void _check_altitudes() {
+  void _checkAltitudes() {
     var pressAltViolationsNum = 0;
     var gnssAltViolationsNum = 0;
     var pressHugeChangesNum = 0;
@@ -749,30 +737,30 @@ class Flight {
     var gnssChgsSum = 0.0;
 
     for (var i = 0; i < fixes.length - 1; i++) {
-      var pressAltDelta = (fixes[i + 1].press_alt - fixes[i].press_alt).abs();
-      var gnssAltDelta = (fixes[i + 1].gnss_alt - fixes[i].gnss_alt).abs();
+      var pressAltDelta = (fixes[i + 1].pressAlt - fixes[i].pressAlt).abs();
+      var gnssAltDelta = (fixes[i + 1].gnssAlt - fixes[i].gnssAlt).abs();
       var rawtimeDelta = (fixes[i + 1].rawtime - fixes[i].rawtime).abs();
 
       if (rawtimeDelta > 0.5) {
-        if (pressAltDelta / rawtimeDelta > _config.max_alt_change_rate) {
+        if (pressAltDelta / rawtimeDelta > _config.maxAltChangeRate) {
           pressHugeChangesNum += 1;
         } else {
           pressChgsSum += pressAltDelta;
         }
 
-        if (gnssAltDelta / rawtimeDelta > _config.max_alt_change_rate) {
+        if (gnssAltDelta / rawtimeDelta > _config.maxAltChangeRate) {
           gnssHugeChangesNum += 1;
         } else {
           gnssChgsSum += gnssAltDelta;
         }
       }
 
-      if ((fixes[i].press_alt > _config.max_alt) ||
-          (fixes[i].press_alt > _config.min_alt)) {
+      if ((fixes[i].pressAlt > _config.maxAlt) ||
+          (fixes[i].pressAlt > _config.minAlt)) {
         pressAltViolationsNum += 1;
       }
-      if ((fixes[i].gnss_alt > _config.max_alt) ||
-          (fixes[i].gnss_alt > _config.min_alt)) {
+      if ((fixes[i].gnssAlt > _config.maxAlt) ||
+          (fixes[i].gnssAlt > _config.minAlt)) {
         gnssAltViolationsNum += 1;
       }
     }
@@ -780,16 +768,16 @@ class Flight {
     var gnssChgsAvg = gnssChgsSum / ((fixes.length - 1).roundToDouble());
 
     var pressAltOk = true;
-    if (pressChgsAvg < _config.min_avg_abs_alt_change) {
+    if (pressChgsAvg < _config.minAvgAbsAltChange) {
       notes.add("Warning: average pressure altitude change between fixes "
-          "is: $pressChgsAvg. It is lower than the minimum: ${_config.min_avg_abs_alt_change}.");
+          "is: $pressChgsAvg. It is lower than the minimum: ${_config.minAvgAbsAltChange}.");
       pressAltOk = false;
     }
 
-    if (pressHugeChangesNum > _config.max_alt_change_violations) {
+    if (pressHugeChangesNum > _config.maxAltChangeViolations) {
       notes.add(
           "Warning: too many high changes in pressure altitude: $pressHugeChangesNum. "
-          "Maximum allowed: ${_config.max_alt_change_violations}.");
+          "Maximum allowed: ${_config.maxAltChangeViolations}.");
       pressAltOk = false;
     }
 
@@ -800,16 +788,16 @@ class Flight {
     }
 
     var gnssAltOk = true;
-    if (gnssChgsAvg < _config.min_avg_abs_alt_change) {
+    if (gnssChgsAvg < _config.minAvgAbsAltChange) {
       notes.add("Warning: average gnss altitude change between fixes "
-          "is: $gnssChgsAvg. It is lower than the minimum: ${_config.min_avg_abs_alt_change}.");
+          "is: $gnssChgsAvg. It is lower than the minimum: ${_config.minAvgAbsAltChange}.");
       gnssAltOk = false;
     }
 
-    if (gnssHugeChangesNum > _config.max_alt_change_violations) {
+    if (gnssHugeChangesNum > _config.maxAltChangeViolations) {
       notes.add(
           "Warning: too many high changes in gnss altitude: $gnssHugeChangesNum. "
-          "Maximum allowed: ${_config.max_alt_change_violations}.");
+          "Maximum allowed: ${_config.maxAltChangeViolations}.");
       gnssAltOk = false;
     }
 
@@ -819,8 +807,8 @@ class Flight {
       gnssAltOk = false;
     }
 
-    press_alt_valid = pressAltOk;
-    gnss_alt_valid = gnssAltOk;
+    pressAltValid = pressAltOk;
+    gnssAltValid = gnssAltOk;
   }
 
   /// Checks for rawtime anomalies, fixes 0:00 UTC crossing.
@@ -828,8 +816,8 @@ class Flight {
   ///       The B records do not have fully qualified timestamps (just the current
   ///       time in UTC), therefore flights that cross 0:00 UTC need special
   ///       handling.
-  void _check_fix_rawtime() {
-    var DAY = 24.0 * 60.0 * 60.0;
+  void _checkFixRawtime() {
+    var day = 24.0 * 60.0 * 60.0;
     var rawtimeToAdd = 0.0;
     var rawtimeBetweenFixExceeded = 0;
 
@@ -840,32 +828,32 @@ class Flight {
       var f1 = fixes[i];
       f1.rawtime += rawtimeToAdd;
 
-      if (f0.rawtime > f1.rawtime && f1.rawtime + DAY < f0.rawtime + 200.0) {
+      if (f0.rawtime > f1.rawtime && f1.rawtime + day < f0.rawtime + 200.0) {
         // Day stitch
         daysAdded += 1;
-        rawtimeToAdd += DAY;
-        f1.rawtime += DAY;
+        rawtimeToAdd += day;
+        f1.rawtime += day;
       }
 
       var timeChange = f1.rawtime - f0.rawtime;
 
-      if (timeChange < _config.min_seconds_between_fixes) {
+      if (timeChange < _config.miSecondsBetweenFixes) {
         rawtimeBetweenFixExceeded += 1;
       }
-      if (timeChange > _config.max_seconds_between_fixes) {
+      if (timeChange > _config.maxSecondsBetweenFixes) {
         rawtimeBetweenFixExceeded += 1;
       }
     }
 
-    if (rawtimeBetweenFixExceeded > _config.max_time_violations) {
+    if (rawtimeBetweenFixExceeded > _config.maxTimeViolations) {
       notes.add("Error: too many fixes intervals exceed time between fixes "
-          "constraints. Allowed ${_config.max_time_violations} fixes, found $rawtimeBetweenFixExceeded fixes.");
+          "constraints. Allowed ${_config.maxTimeViolations} fixes, found $rawtimeBetweenFixExceeded fixes.");
       valid = false;
     }
 
-    if (daysAdded >= _config.max_new_days_in_flight) {
+    if (daysAdded >= _config.maxNewDaysInFlight) {
       notes.add("Error: too many times did the flight cross the UTC 0:00 "
-          "barrier. Allowed ${_config.max_new_days_in_flight} times, found $daysAdded times.");
+          "barrier. Allowed ${_config.maxNewDaysInFlight} times, found $daysAdded times.");
       valid = false;
     }
   }
@@ -926,7 +914,7 @@ class Flight {
   List<LatLng> points() {
     List<LatLng> points = [];
     for (var fix in fixes) {
-      points.add(fix.to_lat_lng());
+      points.add(fix.toLatLng());
     }
     return points;
   }
