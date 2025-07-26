@@ -4,7 +4,6 @@ thanks to https://github.com/marcin-osowski/igc_lib for the help
  */
 
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geobase/geobase.dart';
