@@ -90,7 +90,7 @@ class MapViewModel with ChangeNotifier {
 
   void setCurrentChartData(FlightViewModel flight) {
     selectedFlight = flight.name;
-    lineChartData = LineChartData(lineBarsData: [flight.toLineCHartBarData()]);
+    lineChartData = LineChartData(lineBarsData: [flight.toLineCHartBarData()], lineTouchData: LineTouchData(handleBuiltInTouches: false));
     notifyListeners();
   }
 

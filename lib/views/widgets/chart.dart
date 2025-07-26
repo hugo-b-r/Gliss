@@ -15,7 +15,7 @@ class FlightChart extends StatelessWidget {
       return Padding(
           padding: EdgeInsets.all(10.0),
           child: Consumer<MapViewModel>(
-              builder: (context, map, _) => LineChart(map.lineChartData!, )));
+              builder: (context, map, _) => LineChart(map.lineChartData!)));
     } else {
       return const SizedBox.shrink();
     }
