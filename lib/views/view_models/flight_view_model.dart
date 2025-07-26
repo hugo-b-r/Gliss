@@ -35,7 +35,7 @@ class FlightViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  LineChartBarData toLineCHartBarData() {
+  LineChartBarData toLineChartBarData() {
     List<FlSpot> spots = [];
     for (var fix in _flight.fixes) {
       spots.add(FlSpot(fix.rawtime, fix.gnss_alt));
@@ -47,7 +47,6 @@ class FlightViewModel extends ChangeNotifier {
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(show: false),
-
           spots: spots,
         );
     return lcb;

@@ -17,7 +17,8 @@ class MapViewModel with ChangeNotifier {
   final double _initialZoom = 7;
   String? selectedFlight;
   LineChartData? lineChartData;
-  bool widget_ready = false; // to know whether we can use the mapcontroller or not
+  bool widget_ready =
+      false; // to know whether we can use the mapcontroller or not
 
   double get initialZoom => _initialZoom;
 
@@ -76,7 +77,8 @@ class MapViewModel with ChangeNotifier {
   void centerOnFlight(String flightName) {
     if (flights[flightName] != null && widget_ready) {
       mapController!.move(flights[flightName]!.boundaries.center, _initialZoom);
-      mapController!.fitCamera(CameraFit.bounds(bounds: flights[flightName]!.boundaries));
+      mapController!
+          .fitCamera(CameraFit.bounds(bounds: flights[flightName]!.boundaries));
     }
   }
 
@@ -88,9 +90,44 @@ class MapViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // to be moved to flutter_open_topo_map
+
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    return SideTitleWidget(
+      meta: meta,
+      child: Text('${value.toInt()}', style: TextStyle(
+        color: Colors.black,
+        fontSize: 12,
+      )),
+    );
+  }
+
   void setCurrentChartData(FlightViewModel flight) {
     selectedFlight = flight.name;
-    lineChartData = LineChartData(lineBarsData: [flight.toLineCHartBarData()], lineTouchData: LineTouchData(handleBuiltInTouches: false));
+    lineChartData = LineChartData(
+        lineBarsData: [flight.toLineChartBarData()],
+        lineTouchData: LineTouchData(handleBuiltInTouches: false),
+        titlesData: FlTitlesData(
+            show: true,
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: false,
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 500,
+                reservedSize: 40,
+                getTitlesWidget: leftTitleWidgets,
+              ),
+            )));
     notifyListeners();
   }
 
