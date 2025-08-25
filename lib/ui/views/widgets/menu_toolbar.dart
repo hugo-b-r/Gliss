@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gliding_aid/Pages/settings_page.dart';
-import 'package:gliding_aid/views/view_models/map_view_model.dart';
+import 'package:gliding_aid/ui/views/Pages/settings_page.dart';
+import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../l10n/app_localizations.dart';
+import 'package:gliding_aid/l10n/app_localizations.dart';
 
 class TopToolbar extends StatelessWidget {
   const TopToolbar({

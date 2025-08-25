@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:gliding_aid/l10n/app_localizations.dart';
-import 'package:gliding_aid/views/view_models/flight_view_model.dart';
+import 'package:gliding_aid/ui/viewmodels/flight_view_model.dart';
 
 Future<Color> pickColor(BuildContext context, FlightViewModel fl) async {
   var pickerColor = fl.color;

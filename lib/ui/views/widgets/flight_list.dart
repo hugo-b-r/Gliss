@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gliding_aid/data/color_picking.dart';
 import 'package:provider/provider.dart';
 
-import '../view_models/map_view_model.dart';
+import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 
 class FlightList extends StatefulWidget {
   const FlightList({super.key});

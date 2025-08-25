@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gliding_aid/views/widgets/flight_list.dart';
-import 'package:gliding_aid/views/widgets/menu_toolbar.dart';
-import 'package:gliding_aid/views/widgets/flutter_map_opentopo_polyline.dart';
+import 'package:gliding_aid/ui/views/widgets/flight_list.dart';
+import 'package:gliding_aid/ui/views/widgets/menu_toolbar.dart';
+import 'package:gliding_aid/ui/views/widgets/flutter_map_opentopo_polyline.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../views/view_models/map_view_model.dart';
-import '../views/widgets/chart.dart';
+import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
+import 'package:gliding_aid/ui/views/widgets/chart.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

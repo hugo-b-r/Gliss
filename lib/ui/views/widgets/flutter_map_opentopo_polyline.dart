@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:http_cache_drift_store/http_cache_drift_store.dart';
 
-import '../view_models/map_view_model.dart';
+import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:dio/dio.dart';
 
