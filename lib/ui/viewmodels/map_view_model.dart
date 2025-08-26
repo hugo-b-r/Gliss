@@ -5,8 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/ui/viewmodels/selected_point_marker.dart';
 
-import 'package:gliding_aid/data/igc_flight.dart';
 import 'package:gliding_aid/data/files.dart';
+import 'package:gliding_aid/utils/flight.dart';
+import 'package:gliding_aid/utils/flight_parsing_config.dart';
 import '../../ui/viewmodels/flight_view_model.dart';
 
 class MapViewModel with ChangeNotifier {

@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gliding_aid/utils/flight.dart';
 
-import '../../data/igc_flight.dart';
 
 class FlightViewModel extends ChangeNotifier {
   String name = "";
