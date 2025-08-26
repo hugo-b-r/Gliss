@@ -45,6 +45,7 @@ class Flight {
   ///     gnssAlt_valid: a bool, whether the GNSS altitude sensor is OK
 
   bool valid = true;
+  bool visible = true;
   List<String> notes = [];
   List<GNSSFix> fixes = [];
   List<Thermal> thermals = [];

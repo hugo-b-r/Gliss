@@ -35,7 +35,7 @@ class IgcFileParser {
 
   }
 
-  void parseFileBuffer(FlightParsingConfig config) {
+  Flight parseFileBuffer(FlightParsingConfig config) {
 
     var fileLines = fileBuffer.multiSplit(["\n", "\r"]);
     for (var line in fileLines) {
@@ -59,5 +59,6 @@ class IgcFileParser {
       }
     }
     extractedFlight = Flight(fixes, aRecords, hRecords, iRecords, config);
+    return extractedFlight!;
   }
 }
