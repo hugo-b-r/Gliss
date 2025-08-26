@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gliding_aid/utils/utils.dart';
 import 'package:gliding_aid/utils/strip_non_printable_chars.dart';
 import 'package:gliding_aid/utils/thermal.dart';
 import 'package:latlong2/latlong.dart';
