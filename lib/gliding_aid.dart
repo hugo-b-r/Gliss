@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/data/repositories/flights_repository.dart';
 import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:gliding_aid/ui/views/Pages/home_page.dart';
 import 'package:provider/provider.dart';
@@ -6,15 +7,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'l10n/app_localizations.dart';
 
-
 class GlidingAid extends StatelessWidget {
   const GlidingAid({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MapViewModel>(
-      create: (context) => MapViewModel(),
+    return MultiProvider(
+      providers: [
+        Provider<FlightsRepository>(create: (_) => FlightsRepository()),
+      ],
       child: MaterialApp(
         title: 'GlidingAid',
         theme: ThemeData(
