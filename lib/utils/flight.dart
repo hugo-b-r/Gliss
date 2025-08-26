@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gliding_aid/utils.dart';
+import 'package:gliding_aid/utils/utils.dart';
 import 'package:gliding_aid/utils/strip_non_printable_chars.dart';
 import 'package:gliding_aid/utils/thermal.dart';
 import 'package:latlong2/latlong.dart';
@@ -73,44 +73,6 @@ class Flight {
   int? dateTimestamp = 0;
 
   FlightParsingConfig _config = FlightParsingConfig();
-
-  /// Creates an instance of Flight from a given file.
-
-  ///       Args:
-  ///           filename: a string, the name of the input IGC file
-  ///           config_class: a class that implements FlightParsingConfig
-
-  ///       Returns:
-  ///           An instance of Flight built from the supplied IGC file.
-  static Flight createFromFile(String file, FlightParsingConfig config) {
-    List<GNSSFix> fixes = [];
-    List<String> aRecords = [];
-    List<String> iRecords = [];
-    List<String> hRecords = [];
-    var fileLines = file.multiSplit(["\n", "\r"]);
-    for (var line in fileLines) {
-      if (line.isNotEmpty) {
-        if (line[0] == 'A') {
-          aRecords.add(line);
-        } else if (line[0] == 'B') {
-          var fix = GNSSFix.buildFromBRecord(line, fixes.length);
-          if (fixes.isEmpty ||
-              (fix.rawtime - fixes[fixes.length - 1].rawtime).abs() > 1e-5) {
-            // The time did change since the previous fix -> do not ignore it
-            fixes.add(fix);
-          }
-        } else if (line[0] == 'I') {
-          iRecords.add(line);
-        } else if (line[0] == 'H') {
-          hRecords.add(line);
-        } else {
-          // do not parse any other types of IGC records
-        }
-      }
-    }
-    var flight = Flight(fixes, aRecords, hRecords, iRecords, config);
-    return flight;
-  }
 
   /// Initializer of the Flight class. Not meant to be directly used
   Flight(this.fixes, List<String> aRecords, List<String> hRecords,
