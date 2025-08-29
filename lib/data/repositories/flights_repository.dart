@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gliding_aid/data/repositories/display_flight.dart';
 import 'package:gliding_aid/data/services/igc_file_parsing.dart';
-import 'package:gliding_aid/utils/flight.dart';
 import 'package:gliding_aid/utils/flight_parsing_config.dart';
 
 class FlightsRepository {
-  final Map<String, Flight> _flights = {};
+  final Map<String, DisplayFlight> _flights = {};
 
   List<Polyline> getAsPolylines() {
     List<Polyline> polylines = [];
@@ -30,7 +30,7 @@ class FlightsRepository {
     } catch (e) {
       throw Exception(e);
     }
-    _flights[name] = p.parseFileBuffer(FlightParsingConfig());
+    _flights[name] = DisplayFlight.fromFlight(p.parseFileBuffer(FlightParsingConfig()));
   }
 
   void updateFlightColor(String n, Color c) {
@@ -46,7 +46,7 @@ class FlightsRepository {
     // }
   }
 
-  List<Flight> getFlights() {
+  List<DisplayFlight> getFlights() {
     return _flights.values.toList();
   }
 }

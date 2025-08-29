@@ -11,8 +11,8 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:dio/dio.dart';
 
 class FlutterMapOpentopoPolyline extends StatefulWidget {
-  final String? argPath;
-  const FlutterMapOpentopoPolyline({super.key, this.argPath});
+  final String? dbPath;
+  FlutterMapOpentopoPolyline({super.key, this.dbPath});
 
   @override
   State<FlutterMapOpentopoPolyline> createState() =>
@@ -21,6 +21,8 @@ class FlutterMapOpentopoPolyline extends StatefulWidget {
 
 class _FlutterMapOpentopoPolylineState
     extends State<FlutterMapOpentopoPolyline> {
+  final MapViewModel mapVm = MapViewModel();
+
   @override
   Widget build(BuildContext context) {
     var map = Provider.of<MapViewModel>(context);
@@ -30,8 +32,8 @@ class _FlutterMapOpentopoPolylineState
     }
 
       var path = '';
-      if (widget.argPath != null) {
-        path = widget.argPath!;
+      if (widget.dbPath != null) {
+        path = widget.dbPath!;
       }
       final CacheStore cacheStore = DriftCacheStore(
         databasePath: path, // ignored on web

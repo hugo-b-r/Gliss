@@ -3,9 +3,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:provider/provider.dart';
 
-class FlightChart extends StatelessWidget {
+class FlightChart extends StatefulWidget {
   const FlightChart({super.key});
 
+  @override
+  State<FlightChart> createState() => _FlightChartState();
+}
+
+class _FlightChartState extends State<FlightChart> {
   @override
   Widget build(BuildContext context) {
     var map = Provider.of<MapViewModel>(context);

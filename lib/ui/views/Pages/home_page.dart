@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/data/repositories/flights_repository.dart';
 import 'package:gliding_aid/ui/views/widgets/flight_list.dart';
 import 'package:gliding_aid/ui/views/widgets/menu_toolbar.dart';
 import 'package:gliding_aid/ui/views/widgets/flutter_map_opentopo_polyline.dart';
@@ -86,7 +87,7 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return const Row(
+      return Row(
         children: [
           HomeMenu(ratio: 0.4),
           Expanded(child: FlutterMapOpentopoPolyline())
@@ -102,7 +103,7 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
                   builder: (ctx, snapshot) {
                     if (snapshot.hasData) {
                       final dataPath = snapshot.requireData.path;
-                      return FlutterMapOpentopoPolyline(argPath: dataPath);
+                      return FlutterMapOpentopoPolyline(dbPath: dataPath);
                     }
                     if (snapshot.hasError) {
                       debugPrint(snapshot.error.toString());
@@ -133,9 +134,9 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
     if (kIsWeb) {
       return Column(children: [
         FlutterMapOpentopoPolyline(),
-        Consumer<MapViewModel>(
-            builder: (ctx, map, _) => Builder(builder: (ctx) {
-                  if (map.flights.isNotEmpty) {
+        Consumer<FlightsRepository>(
+            builder: (ctx, flRepo, _) => Builder(builder: (ctx) {
+                  if (flRepo.getFlights().isNotEmpty) {
                     return SizedBox(
                         height: 0.4 * height,
                         child: HomeMenu(ratio: 0.2));
@@ -145,8 +146,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                 }))
       ]);
     } else {
-      return Consumer<MapViewModel>(
-          builder: (context, map, _) => Column(
+      return Column(
                 children: [
                   Expanded(child: FutureBuilder(
                       future: getTemporaryDirectory(),
@@ -154,7 +154,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                         if (snapshot.hasData) {
                           final dataPath = snapshot.requireData.path;
                           return FlutterMapOpentopoPolyline(
-                              argPath: dataPath);
+                              dbPath: dataPath);
                         }
                         if (snapshot.hasError) {
                           debugPrint(snapshot.error.toString());
@@ -165,9 +165,9 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                         }
                         return Text("Hello");
                       })),
-                  Consumer<MapViewModel>(
-                      builder: (ctx, map, _) => Builder(builder: (ctx) {
-                        if (map.flights.isNotEmpty) {
+                  Consumer<FlightsRepository>(
+                      builder: (ctx, flRepo, _) => Builder(builder: (ctx) {
+                        if (flRepo.getFlights().isNotEmpty) {
                           return SizedBox(
                               height: 0.4 * height,
                               child: HomeMenu(ratio: 0.2));
@@ -176,7 +176,7 @@ class _VerticalHomePageState extends State<VerticalHomePage> {
                         }
                       }))
                 ],
-              ));
+              );
     }
   }
 }
@@ -199,8 +199,8 @@ class _HomeMenuState extends State<HomeMenu> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
-    var map = Provider.of<MapViewModel>(context);
-    if (map.flights.isEmpty) {
+    var flRepo = Provider.of<FlightsRepository>(context);
+    if (flRepo.getFlights().isEmpty) {
       return const SizedBox.shrink();
     } else {
       return SizedBox(

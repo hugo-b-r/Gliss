@@ -9,14 +9,10 @@ import 'package:gliding_aid/utils/flight.dart';
 import 'package:gliding_aid/utils/flight_parsing_config.dart';
 import '../../ui/viewmodels/flight_view_model.dart';
 
-class MapViewModel with ChangeNotifier {
-  String _loadedIgcFile = "";
-  final Map<String, FlightViewModel> flights = {};
-  SelectedPointMarker? selectedPointMarker; // if null, not showed
+class MapViewModel {
+  List<Polyline> _polylines = [];
   MapController? mapController;
   final double _initialZoom = 7;
-  String? selectedFlight;
-  LineChartData? lineChartData;
   bool widgetReady =
       false; // to know whether we can use the mapcontroller or not
 
