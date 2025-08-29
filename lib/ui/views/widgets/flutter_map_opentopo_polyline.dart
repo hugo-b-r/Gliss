@@ -79,7 +79,7 @@ class _FlutterMapOpentopoPolylineState
                         point: map.getActualOverviewFix().toLatLng(),
                         width: 80,
                         height: 80,
-                        child: Transform.rotate(angle: map.getActualOverviewFix().bearing * math.pi / 180, child: Icon(Icons.flight, color: map.getOverviewColor(),)),
+                        child: Transform.rotate(angle: map.getActualOverviewFix().bearing * math.pi / 180, child: Icon(Icons.flight, color: map.getOverviewColor(),size: 50, weight:3)),
                       ),
                     ],
                   ),

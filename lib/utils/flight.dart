@@ -113,6 +113,7 @@ class Flight {
   /// Initializer of the Flight class. Not meant to be directly used
   Flight(this._fixes, List<String> aRecords, List<String> hRecords,
       List<String> iRecords, FlightParsingConfig config) {
+
     _config = config;
     valid = true;
     notes = [];
@@ -133,6 +134,8 @@ class Flight {
       return;
     }
 
+    print("parsing flight");
+    _computeBearings();
     if (pressAltValid) {
       altSource = "PRESS";
     } else if (gnssAltValid) {
@@ -140,6 +143,7 @@ class Flight {
     } else {
       notes.add("Error : neither pressure nor gnss altitude is valid.");
       valid = false;
+      print("invalid pressure or gnss altitude");
       return;
     }
 
@@ -154,10 +158,6 @@ class Flight {
     if (hRecords.isNotEmpty) {
       _parseHRecords(hRecords);
     }
-
-    _computeBearings();
-
-
   }
 
   /// Parses the IGC A record.
@@ -447,6 +447,9 @@ class Flight {
   void _computeBearings() {
     for (var i = 0; i < (_fixes.length-1); i++) {
       _fixes[i].bearing = _fixes[i].bearingTo(_fixes[i+1]);
+      if (_fixes[i].bearing.isNaN) {
+        _fixes[i].bearing = 0;
+      }
     }
   }
 
