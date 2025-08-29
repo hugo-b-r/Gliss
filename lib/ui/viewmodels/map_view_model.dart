@@ -146,7 +146,6 @@ class MapViewModel with ChangeNotifier {
     var overviewFixIndex = ( progr * flights[selectedFlight]!.flight.fixes().length / 100).toInt();
     flights[selectedFlight]!.overviewFix = flights[selectedFlight]!.flight.fixes()[overviewFixIndex];
     notifyListeners();
-    print(getActualOverviewFix().bearing * math.pi / 180);
   }
 
   GNSSFix getActualOverviewFix() {

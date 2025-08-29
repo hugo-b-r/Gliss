@@ -134,7 +134,6 @@ class Flight {
       return;
     }
 
-    print("parsing flight");
     _computeBearings();
     if (pressAltValid) {
       altSource = "PRESS";
@@ -143,7 +142,6 @@ class Flight {
     } else {
       notes.add("Error : neither pressure nor gnss altitude is valid.");
       valid = false;
-      print("invalid pressure or gnss altitude");
       return;
     }
 
