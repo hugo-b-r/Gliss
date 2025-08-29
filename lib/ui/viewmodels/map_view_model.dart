@@ -20,6 +20,7 @@ class MapViewModel with ChangeNotifier {
   bool widgetReady =
       false; // to know whether we can use the mapcontroller or not
   double _flightProgression = 0;
+  bool overviewVisibilty = false;
 
 
   double get initialZoom => _initialZoom;
@@ -106,6 +107,7 @@ class MapViewModel with ChangeNotifier {
 
   void setCurrentChartData(FlightViewModel flight) {
     selectedFlight = flight.name;
+    overviewVisibilty = true;
     lineChartData = LineChartData(
         lineBarsData: [flight.toLineChartBarData()],
         lineTouchData: LineTouchData(handleBuiltInTouches: false),
@@ -149,10 +151,18 @@ class MapViewModel with ChangeNotifier {
   }
 
   GNSSFix getActualOverviewFix() {
-    return flights[selectedFlight]!.overviewFix;
+    if (flights[selectedFlight] == null) {
+      return GNSSFix(0, 0, 0, "", 0, 0, "");
+    } else {
+      return flights[selectedFlight]!.overviewFix;
+    }
   }
 
   Color getOverviewColor() {
-    return flights[selectedFlight]!.color;
+    if (flights[selectedFlight] == null) {
+      return Colors.black;
+    } else {
+      return flights[selectedFlight]!.color;
+    }
   }
 }

@@ -31,66 +31,73 @@ class _FlutterMapOpentopoPolylineState
       map.isNotReady();
     }
 
-      var path = '';
-      if (widget.argPath != null) {
-        path = widget.argPath!;
-      }
-      final CacheStore cacheStore = DriftCacheStore(
-        databasePath: path, // ignored on web
-        databaseName: 'DbCacheStore',
-      );
-      final dio = Dio();
-      return Consumer<MapViewModel>(
-              builder: (context, map, _) => FlutterMap(
-                mapController: map.mapController,
-                options: MapOptions(
-                    keepAlive: true,
-                    initialZoom: 3.2,
-                    initialCenter: const LatLng(50.0, 5.0),
-                    onMapReady: () => {map.isReady()}
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                    'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
-                    //tileProvider: CachedTileProvider(store: HiveCacheStore(path, hiveBoxName: 'HiveCacheStore')),
-                    // CancellableNetworkTileProvider(),
-                    userAgentPackageName: 'com.gliding_aid.app',
-                    tileProvider: CachedTileProvider(
-                      dio: dio,
-                      maxStale: const Duration(days: 30),
-                      store: cacheStore,
-                      interceptors: [
-                        LogInterceptor(
-                          logPrint: (object) => debugPrint(object.toString()),
-                          responseHeader: false,
-                          requestHeader: false,
-                          request: false,
-                        )
-                      ],
-                    ), //retinaMode: RetinaMode.isHighDensity(context),
-                  ),
-                  PolylineLayer(
-                    polylines: map.polylines(),
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: map.getActualOverviewFix().toLatLng(),
-                        width: 80,
-                        height: 80,
-                        child: Transform.rotate(angle: map.getActualOverviewFix().bearing * math.pi / 180, child: Icon(Icons.flight, color: map.getOverviewColor(),size: 50, weight:3)),
-                      ),
+    var path = '';
+    if (widget.argPath != null) {
+      path = widget.argPath!;
+    }
+    final CacheStore cacheStore = DriftCacheStore(
+      databasePath: path, // ignored on web
+      databaseName: 'DbCacheStore',
+    );
+    final dio = Dio();
+    return Consumer<MapViewModel>(
+        builder: (context, map, _) => FlutterMap(
+              mapController: map.mapController,
+              options: MapOptions(
+                  keepAlive: true,
+                  initialZoom: 3.2,
+                  initialCenter: const LatLng(50.0, 5.0),
+                  onMapReady: () => {map.isReady()}),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
+                  //tileProvider: CachedTileProvider(store: HiveCacheStore(path, hiveBoxName: 'HiveCacheStore')),
+                  // CancellableNetworkTileProvider(),
+                  userAgentPackageName: 'com.gliding_aid.app',
+                  tileProvider: CachedTileProvider(
+                    dio: dio,
+                    maxStale: const Duration(days: 30),
+                    store: cacheStore,
+                    interceptors: [
+                      LogInterceptor(
+                        logPrint: (object) => debugPrint(object.toString()),
+                        responseHeader: false,
+                        requestHeader: false,
+                        request: false,
+                      )
                     ],
-                  ),
-                  const RichAttributionWidget(
-                      animationConfig: ScaleRAWA(),
-                      attributions: [
-                        TextSourceAttribution(
-                            'Map data: © OpenStreetMap-Mitwirkende, SRTM | Map display: © OpenTopoMap (CC-BY-SA)')
-                      ]),
-                ],
-              )
-      );
+                  ), //retinaMode: RetinaMode.isHighDensity(context),
+                ),
+                PolylineLayer(
+                  polylines: map.polylines(),
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: map.getActualOverviewFix().toLatLng(),
+                      width: 80,
+                      height: 80,
+                      child: Visibility(
+                        child: Transform.rotate(
+                            angle: map.getActualOverviewFix().bearing *
+                                math.pi /
+                                180,
+                            child: Icon(Icons.flight,
+                                color: map.getOverviewColor(),
+                                size: 50,
+                                weight: 3)),
+                        visible: map.overviewVisibilty,
+                      ),
+                    ),
+                  ],
+                ),
+                const RichAttributionWidget(
+                    animationConfig: ScaleRAWA(),
+                    attributions: [
+                      TextSourceAttribution(
+                          'Map data: © OpenStreetMap-Mitwirkende, SRTM | Map display: © OpenTopoMap (CC-BY-SA)')
+                    ]),
+              ],
+            ));
   }
 }
