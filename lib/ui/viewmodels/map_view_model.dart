@@ -25,6 +25,8 @@ class MapViewModel with ChangeNotifier {
 
   double get initialZoom => _initialZoom;
 
+  double get overviewProgress => _flightProgression;
+
   void clearFlights() {
     flights.clear();
     lineChartData = LineChartData();
@@ -144,7 +146,7 @@ class MapViewModel with ChangeNotifier {
   }
 
   void setFlightOverviewPoint(double progr) {
-    _flightProgression = progr;
+    flights[selectedFlight]!.overviewFixProgress = progr;
     var overviewFixIndex = ( progr * flights[selectedFlight]!.flight.fixes().length / 100).toInt();
     flights[selectedFlight]!.overviewFix = flights[selectedFlight]!.flight.fixes()[overviewFixIndex];
     notifyListeners();
@@ -165,4 +167,11 @@ class MapViewModel with ChangeNotifier {
       return flights[selectedFlight]!.color;
     }
   }
+
+  double getOverviewProgress() {
+    if (flights[selectedFlight] == null) {
+      return 0;
+    } else {
+      return flights[selectedFlight]!.overviewFixProgress;
+    }  }
 }

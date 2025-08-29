@@ -13,6 +13,8 @@ class FlightViewModel extends ChangeNotifier {
   bool viewable = true;
   Color color = Colors.red;
   late GNSSFix overviewFix;
+  double overviewFixProgress = 0;
+
 
   FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
     _flight = flight;

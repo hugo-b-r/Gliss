@@ -165,7 +165,7 @@ class _HomeMenuState extends State<HomeMenu> {
           child: Column(children: [
             const Expanded(child: SingleChildScrollView(child: FlightList())),
             Slider(
-              value: progression,
+              value: map.getOverviewProgress(),
               min: 0,
               max: 100,
               onChanged: (double value) {
