@@ -78,15 +78,24 @@ class _FlutterMapOpentopoPolylineState
                       width: 80,
                       height: 80,
                       child: Visibility(
+                        visible: map.overviewVisibilty,
                         child: Transform.rotate(
                             angle: map.getActualOverviewFix().bearing *
                                 math.pi /
                                 180,
-                            child: Icon(Icons.flight,
-                                color: map.getOverviewColor(),
-                                size: 50,
-                                weight: 3)),
-                        visible: map.overviewVisibilty,
+                            child: Icon(
+                              Icons.flight,
+                              color: map.getOverviewColor(),
+                              size: 50,
+                              weight: 3,
+                              shadows: List.generate(
+                                10,
+                                (index) => Shadow(
+                                  blurRadius: 2,
+                                  color: Theme.of(context).canvasColor,
+                                ),
+                              ),
+                            )),
                       ),
                     ),
                   ],
