@@ -3,23 +3,24 @@ import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
-import 'package:gliding_aid/ui/viewmodels/selected_point_marker.dart';
 
 import 'package:gliding_aid/data/files.dart';
 import 'package:gliding_aid/utils/flight.dart';
 import 'package:gliding_aid/utils/flight_parsing_config.dart';
+import 'package:gliding_aid/utils/gnss_fix.dart';
 import '../../ui/viewmodels/flight_view_model.dart';
 
 class MapViewModel with ChangeNotifier {
   String _loadedIgcFile = "";
   final Map<String, FlightViewModel> flights = {};
-  SelectedPointMarker? selectedPointMarker; // if null, not showed
   MapController? mapController;
   final double _initialZoom = 7;
   String? selectedFlight;
   LineChartData? lineChartData;
   bool widgetReady =
       false; // to know whether we can use the mapcontroller or not
+  double _flightProgression = 0;
+
 
   double get initialZoom => _initialZoom;
 
@@ -138,5 +139,20 @@ class MapViewModel with ChangeNotifier {
 
   void isNotReady() {
     widgetReady = false;
+  }
+
+  void setFlightOverviewPoint(double progr) {
+    _flightProgression = progr;
+    var overviewFixIndex = ( progr * flights[selectedFlight]!.flight.fixes().length / 100).toInt();
+    flights[selectedFlight]!.overviewFix = flights[selectedFlight]!.flight.fixes()[overviewFixIndex];
+    notifyListeners();
+  }
+
+  GNSSFix getActualOverviewFix() {
+    return flights[selectedFlight]!.overviewFix;
+  }
+
+  Color getOverviewColor() {
+    return flights[selectedFlight]!.color;
   }
 }

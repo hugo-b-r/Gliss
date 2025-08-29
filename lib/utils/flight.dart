@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gliding_aid/utils.dart';
@@ -49,7 +47,7 @@ class Flight {
 
   bool valid = true;
   List<String> notes = [];
-  List<GNSSFix> fixes = [];
+  List<GNSSFix> _fixes = [];
   List<Thermal> thermals = [];
   List<Glide> glides = [];
   GNSSFix takeoffFix = GNSSFix(0, 0, 0, "", 0, 0, "");
@@ -113,13 +111,13 @@ class Flight {
   }
 
   /// Initializer of the Flight class. Not meant to be directly used
-  Flight(this.fixes, List<String> aRecords, List<String> hRecords,
+  Flight(this._fixes, List<String> aRecords, List<String> hRecords,
       List<String> iRecords, FlightParsingConfig config) {
     _config = config;
     valid = true;
     notes = [];
-    if (fixes.length < _config.minFixes) {
-      notes.add("Error : This file has ${fixes.length}, less than "
+    if (_fixes.length < _config.minFixes) {
+      notes.add("Error : This file has ${_fixes.length}, less than "
           "the minimum ${_config.minFixes}");
       valid = false;
       return;
@@ -156,6 +154,10 @@ class Flight {
     if (hRecords.isNotEmpty) {
       _parseHRecords(hRecords);
     }
+
+    _computeBearings();
+
+
   }
 
   /// Parses the IGC A record.
@@ -277,10 +279,10 @@ class Flight {
     var pressChgsSum = 0.0;
     var gnssChgsSum = 0.0;
 
-    for (var i = 0; i < fixes.length - 1; i++) {
-      var pressAltDelta = (fixes[i + 1].pressAlt - fixes[i].pressAlt).abs();
-      var gnssAltDelta = (fixes[i + 1].gnssAlt - fixes[i].gnssAlt).abs();
-      var rawtimeDelta = (fixes[i + 1].rawtime - fixes[i].rawtime).abs();
+    for (var i = 0; i < _fixes.length - 1; i++) {
+      var pressAltDelta = (_fixes[i + 1].pressAlt - _fixes[i].pressAlt).abs();
+      var gnssAltDelta = (_fixes[i + 1].gnssAlt - _fixes[i].gnssAlt).abs();
+      var rawtimeDelta = (_fixes[i + 1].rawtime - _fixes[i].rawtime).abs();
 
       if (rawtimeDelta > 0.5) {
         if (pressAltDelta / rawtimeDelta > _config.maxAltChangeRate) {
@@ -296,17 +298,17 @@ class Flight {
         }
       }
 
-      if ((fixes[i].pressAlt > _config.maxAlt) ||
-          (fixes[i].pressAlt > _config.minAlt)) {
+      if ((_fixes[i].pressAlt > _config.maxAlt) ||
+          (_fixes[i].pressAlt > _config.minAlt)) {
         pressAltViolationsNum += 1;
       }
-      if ((fixes[i].gnssAlt > _config.maxAlt) ||
-          (fixes[i].gnssAlt > _config.minAlt)) {
+      if ((_fixes[i].gnssAlt > _config.maxAlt) ||
+          (_fixes[i].gnssAlt > _config.minAlt)) {
         gnssAltViolationsNum += 1;
       }
     }
-    var pressChgsAvg = pressChgsSum / ((fixes.length - 1).roundToDouble());
-    var gnssChgsAvg = gnssChgsSum / ((fixes.length - 1).roundToDouble());
+    var pressChgsAvg = pressChgsSum / ((_fixes.length - 1).roundToDouble());
+    var gnssChgsAvg = gnssChgsSum / ((_fixes.length - 1).roundToDouble());
 
     var pressAltOk = true;
     if (pressChgsAvg < _config.minAvgAbsAltChange) {
@@ -364,9 +366,9 @@ class Flight {
 
     var daysAdded = 0;
 
-    for (var i = 1; i < fixes.length; i++) {
-      var f0 = fixes[i - 1];
-      var f1 = fixes[i];
+    for (var i = 1; i < _fixes.length; i++) {
+      var f0 = _fixes[i - 1];
+      var f1 = _fixes[i];
       f1.rawtime += rawtimeToAdd;
 
       if (f0.rawtime > f1.rawtime && f1.rawtime + day < f0.rawtime + 200.0) {
@@ -442,6 +444,12 @@ class Flight {
 //   }
 // }
 
+  void _computeBearings() {
+    for (var i = 0; i < (_fixes.length-1); i++) {
+      _fixes[i].bearing = _fixes[i].bearingTo(_fixes[i+1]);
+    }
+  }
+
   Polyline toPolyline(double strokeWidth, Color lineColor) {
     return Polyline(
       points: points(),
@@ -454,9 +462,13 @@ class Flight {
 
   List<LatLng> points() {
     List<LatLng> points = [];
-    for (var fix in fixes) {
+    for (var fix in _fixes) {
       points.add(fix.toLatLng());
     }
     return points;
+  }
+
+  List<GNSSFix> fixes() {
+    return _fixes;
   }
 }

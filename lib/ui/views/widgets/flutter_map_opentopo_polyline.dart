@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -70,6 +72,16 @@ class _FlutterMapOpentopoPolylineState
                   ),
                   PolylineLayer(
                     polylines: map.polylines(),
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: map.getActualOverviewFix().toLatLng(),
+                        width: 80,
+                        height: 80,
+                        child: Transform.rotate(angle: map.getActualOverviewFix().bearing * math.pi / 180, child: Icon(Icons.flight, color: map.getOverviewColor(),)),
+                      ),
+                    ],
                   ),
                   const RichAttributionWidget(
                       animationConfig: ScaleRAWA(),

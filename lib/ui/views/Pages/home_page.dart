@@ -214,6 +214,7 @@ class _HomeMenuState extends State<HomeMenu> {
               onChanged: (double value) {
                 setState(() {
                   progression = value;
+                  map.setFlightOverviewPoint(value);
                 });
               },
             ),
