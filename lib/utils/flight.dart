@@ -401,48 +401,6 @@ class Flight {
     }
   }
 
-  // /// Adds ground speed info (km/h) to self.fixes.
-  // void _compute_ground_speeds() {
-  //   fixes[0].gsp = 0.0;
-  //   for (int i = 1; i < fixes.length; i++) {
-  //     var dist = fixes[i].distance_to(fixes[i - 1]);
-  //     var rawtime = fixes[i].rawtime - fixes[i - 1].rawtime;
-  //     if (rawtime.abs() < 1e-5) {
-  //       fixes[i].gsp = 0.0;
-  //     } else {
-  //       fixes[i].gsp = dist / rawtime * 3600;
-  //     }
-  //   }
-  // }
-
-  /// Generates raw flying/not flying emissions from ground speed.
-
-  ///       Standing (i.e. not flying) is encoded as 0, flying is encoded as 1.
-  ///       Exported to a separate function to be used in Baum-Welch parameters
-  ///       learning.
-  // List<int> _flying_emissions() {
-  //   List<int> emissions = [];
-  //   for (var fix in fixes) {
-  //     if (fix.gsp > _config.min_gsp_flight) {
-  //       emissions.add(1);
-  //     } else {
-  //       emissions.add(0);
-  //     }
-  //   }
-  //   return emissions;
-  // }
-
-//   /// Adds boolean flag .flying to self.fixes.
-
-//   ///       Two pass:
-//   ///         1. Viterbi decoder
-//   ///         2. Only emit landings (0) if the downtime is more than
-//   ///            _config.min_landing_time (or it's the end of the log).
-//   void _compute_flight() {
-//     var emissions = this._flying_emissions();
-
-//   }
-// }
 
   void _computeBearings() {
     for (var i = 0; i < (_fixes.length-1); i++) {
