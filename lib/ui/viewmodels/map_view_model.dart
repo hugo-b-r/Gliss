@@ -16,16 +16,19 @@ class MapViewModel with ChangeNotifier {
   MapController? mapController;
   final double _initialZoom = 7;
   String? selectedFlight;
+  LineChartBarData? lineChartBarData;
   LineChartData? lineChartData;
   bool widgetReady =
       false; // to know whether we can use the mapcontroller or not
   double _flightProgression = 0;
+  int _flightProgressionIndex = 0;
   bool overviewVisibilty = false;
-
 
   double get initialZoom => _initialZoom;
 
   double get overviewProgress => _flightProgression;
+
+  int get flightProgressionIndex => _flightProgressionIndex;
 
   void clearFlights() {
     flights.clear();
@@ -100,18 +103,21 @@ class MapViewModel with ChangeNotifier {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     return SideTitleWidget(
       meta: meta,
-      child: Text('${value.toInt()}', style: TextStyle(
-        color: Colors.black,
-        fontSize: 12,
-      )),
+      child: Text('${value.toInt()}',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 12,
+          )),
     );
   }
 
   void setCurrentChartData(FlightViewModel flight) {
     selectedFlight = flight.name;
+    _flightProgressionIndex = flights[selectedFlight]!.overviewIndex;
+    lineChartBarData = flight.toLineChartBarData();
     overviewVisibilty = true;
     lineChartData = LineChartData(
-        lineBarsData: [flight.toLineChartBarData()],
+        lineBarsData: [lineChartBarData!],
         lineTouchData: LineTouchData(handleBuiltInTouches: false),
         titlesData: FlTitlesData(
             show: true,
@@ -147,8 +153,16 @@ class MapViewModel with ChangeNotifier {
 
   void setFlightOverviewPoint(double progr) {
     flights[selectedFlight]!.overviewFixProgress = progr;
-    var overviewFixIndex = ( progr * flights[selectedFlight]!.flight.fixes().length / 100).toInt();
-    flights[selectedFlight]!.overviewFix = flights[selectedFlight]!.flight.fixes()[overviewFixIndex];
+    var overviewFixIndex =
+        (progr * flights[selectedFlight]!.flight.fixes().length / 100).toInt();
+    flights[selectedFlight]!.overviewIndex = overviewFixIndex;
+    flights[selectedFlight]!.overviewFix =
+        flights[selectedFlight]!.flight.fixes()[overviewFixIndex];
+    if (lineChartData != null) {
+      lineChartData = lineChartData!.copyWith(lineBarsData: [
+        lineChartBarData!.copyWith(showingIndicators: [overviewFixIndex])
+      ]);
+    }
     notifyListeners();
   }
 
@@ -173,5 +187,6 @@ class MapViewModel with ChangeNotifier {
       return 0;
     } else {
       return flights[selectedFlight]!.overviewFixProgress;
-    }  }
+    }
+  }
 }

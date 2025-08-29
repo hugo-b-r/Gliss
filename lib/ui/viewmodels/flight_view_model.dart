@@ -14,6 +14,7 @@ class FlightViewModel extends ChangeNotifier {
   Color color = Colors.red;
   late GNSSFix overviewFix;
   double overviewFixProgress = 0;
+  int overviewIndex = 0;
 
 
   FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
@@ -57,6 +58,24 @@ class FlightViewModel extends ChangeNotifier {
           belowBarData: BarAreaData(show: false),
           spots: spots,
         );
+    return lcb;
+  }
+
+  LineChartBarData toSpots() {
+    List<FlSpot> spots = [];
+    for (var fix in _flight.fixes()) {
+      spots.add(FlSpot(fix.rawtime, fix.gnssAlt));
+    }
+    var lcb = LineChartBarData(
+      isCurved: true,
+      color: color,
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: const FlDotData(show: false),
+      belowBarData: BarAreaData(show: false),
+      spots: spots,
+      showingIndicators: overviewIndex == 0 ? [] : [overviewIndex],
+    );
     return lcb;
   }
 }
