@@ -33,6 +33,7 @@ class MapViewModel with ChangeNotifier {
   void clearFlights() {
     flights.clear();
     lineChartData = LineChartData();
+    overviewVisibilty = false;
     notifyListeners();
   }
 
@@ -94,6 +95,7 @@ class MapViewModel with ChangeNotifier {
     flights.remove(name);
     if (flights.isEmpty) {
       lineChartData = LineChartData();
+      overviewVisibilty = false;
     }
     notifyListeners();
   }

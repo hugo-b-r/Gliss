@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:gliding_aid/ui/views/widgets/chart.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -25,11 +25,6 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -38,8 +33,51 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     // we need a layoutbuilder widget https://clouddevs.com/flutter/responsive-design/#:~:text=The%20LayoutBuilder%20widget%20gives%20you,adapt%20to%20different%20screen%20sizes.
-    return Scaffold(
-      body: FutureBuilder(
+    if (kIsWeb) {
+      return Provider<DriftCacheStore>(
+        create: (context) => DriftCacheStore(
+          databasePath: '', // ignored on web
+          databaseName: 'DbCacheStore',
+        ),
+        child: Scaffold(
+          body: Stack(
+            // alignment: Alignment.center, // <---------
+            children: [
+              LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                if (constraints.maxWidth > 900) {
+                  return const HorizontalHomePage();
+                } else {
+                  return const VerticalHomePage();
+                }
+              }),
+              Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(60)),
+                          color: Theme.of(context).colorScheme.surface,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              offset: const Offset(
+                                5.0,
+                                5.0,
+                              ),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ), //BoxShadow
+                          ]),
+                      child: const TopToolbar())),
+            ],
+          ),
+        ),
+        dispose: (context, db) => db.close(),
+      );
+    } else
+      return FutureBuilder(
           future: getTemporaryDirectory(),
           builder: (ctx, snapshot) {
             if (snapshot.hasData) {
@@ -49,7 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   databasePath: kIsWeb ? '' : dataPath, // ignored on web
                   databaseName: 'DbCacheStore',
                 ),
-                child: Stack(
+                child: Scaffold(
+                    body: Stack(
                   // alignment: Alignment.center, // <---------
                   children: [
                     LayoutBuilder(builder:
@@ -82,14 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ]),
                             child: const TopToolbar())),
                   ],
-                ),
+                )),
                 dispose: (context, db) => db.close(),
               );
             } else {
               return Text("Hello");
             }
-          }),
-    );
+          });
   }
 }
 
