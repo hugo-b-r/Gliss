@@ -5,7 +5,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:http_cache_drift_store/http_cache_drift_store.dart';
 
 import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
@@ -31,14 +30,6 @@ class _FlutterMapOpentopoPolylineState
       map.isNotReady();
     }
 
-    var path = '';
-    if (widget.argPath != null) {
-      path = widget.argPath!;
-    }
-    final CacheStore cacheStore = DriftCacheStore(
-      databasePath: path, // ignored on web
-      databaseName: 'DbCacheStore',
-    );
     final dio = Dio();
     return Consumer<MapViewModel>(
         builder: (context, map, _) => FlutterMap(
@@ -57,7 +48,7 @@ class _FlutterMapOpentopoPolylineState
                   tileProvider: CachedTileProvider(
                     dio: dio,
                     maxStale: const Duration(days: 30),
-                    store: cacheStore,
+                    store: Provider.of<DriftCacheStore>(context),
                     interceptors: [
                       LogInterceptor(
                         logPrint: (object) => debugPrint(object.toString()),
