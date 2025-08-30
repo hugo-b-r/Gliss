@@ -17,10 +17,16 @@ class HorizontalHomePage extends StatefulWidget {
 class _HorizontalHomePageState extends State<HorizontalHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4)),
-        Expanded(child: FlutterMapOpentopoPolyline())
+        Consumer<MapViewModel>(builder: (BuildContext context, MapViewModel map, Widget? child) {
+          if (map.flights.isNotEmpty) {
+            return const SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4));
+          } else {
+            return SizedBox.shrink();
+          }
+        },),
+        const Expanded(child: FlutterMapOpentopoPolyline())
       ],
     );
   }
