@@ -38,6 +38,9 @@ class _FlutterMapOpentopoPolylineState
                   keepAlive: true,
                   initialZoom: 3.2,
                   initialCenter: const LatLng(50.0, 5.0),
+                  interactionOptions: const InteractionOptions(
+                    flags: InteractiveFlag.all  & ~InteractiveFlag.pinchMove
+                  ),
                   onMapReady: () => {map.isReady()}),
               children: [
                 TileLayer(
