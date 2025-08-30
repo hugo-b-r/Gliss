@@ -11,7 +11,6 @@ import 'package:gliding_aid/utils/gnss_fix.dart';
 import '../../ui/viewmodels/flight_view_model.dart';
 
 class MapViewModel with ChangeNotifier {
-  String _loadedIgcFile = "";
   final Map<String, FlightViewModel> flights = {};
   MapController? mapController;
   final double _initialZoom = 7;
@@ -45,28 +44,55 @@ class MapViewModel with ChangeNotifier {
   }
 
   Future<void> openIgcFile() async {
-    String name = "";
-    String file;
+    List<(String, String)> contentName = [];
+    // try {
+    //   (file, name) = await pickFirstFile();
+    //   _loadedIgcFile = file;
+    // } catch (e) {
+    //   throw Exception(e);
+    // }
+    // var currentFlight =
+    //     Flight.createFromFile(_loadedIgcFile, FlightParsingConfig());
+    // Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+    //     .withValues(alpha: 1.0);
+    // var flVm = FlightViewModel(currentFlight, randomColor, 4, name);
+    //
+    // flights[name] = flVm;
+    //
+    // setCurrentChartData(flVm);
+    //
+    // if (widgetReady) {
+    //   mapController!.move(flVm.boundaries.center, _initialZoom);
+    //   mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
+    // }
+    // notifyListeners();
+
     try {
-      (file, name) = await pickFirstFile();
-      _loadedIgcFile = file;
+      contentName = await pickManyFiles();
     } catch (e) {
       throw Exception(e);
     }
-    var currentFlight =
-        Flight.createFromFile(_loadedIgcFile, FlightParsingConfig());
-    Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-        .withValues(alpha: 1.0);
-    var flVm = FlightViewModel(currentFlight, randomColor, 4, name);
+    FlightViewModel? flVm;
+    for (var (content, name) in contentName) {
+      var currentFlight = Flight.createFromFile(content, FlightParsingConfig());
+      Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+          .withValues(alpha: 1.0);
+      flVm = FlightViewModel(currentFlight, randomColor, 4, name);
 
-    flights[name] = flVm;
-
-    setCurrentChartData(flVm);
-
-    if (widgetReady) {
-      mapController!.move(flVm.boundaries.center, _initialZoom);
-      mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
+      flights[name] = flVm;
+      selectedFlight = name;
     }
+
+    if (flVm != null) {
+      // we have opened a file so it should have been called once, right ?
+      setCurrentChartData(flVm);
+      if (widgetReady) {
+        mapController!.move(flVm.boundaries.center, _initialZoom);
+        mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
+      }
+    }
+
+
     notifyListeners();
   }
 

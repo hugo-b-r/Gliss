@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 
 Future<(String, String)> pickFirstFile() async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles();
+  FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true,  allowedExtensions: ['IGC', 'igc']);
 
   if (result != null) {
     var name = "";
@@ -15,8 +15,24 @@ Future<(String, String)> pickFirstFile() async {
     // User canceled the picker
     throw 'User canceled the picker !';
   }
-
 }
 
+Future<List<(String, String)>> pickManyFiles() async {
+  FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true,  allowedExtensions: ['IGC', 'igc']);
 
+  if (result != null) {
+    var name = "";
+    var igcContent = "";
+    List<(String, String)> res = [];
+    for (var file in result.files) {
+      name = file.name;
+      igcContent = await file.xFile.readAsString();
+      res.add((igcContent, name));
+    }
+    return res;
+  } else {
+    // User canceled the picker
+    throw 'User canceled the picker !';
+  }
+}
 
