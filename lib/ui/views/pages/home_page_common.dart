@@ -4,6 +4,7 @@ import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:gliding_aid/ui/views/widgets/chart.dart';
 import 'package:gliding_aid/ui/views/widgets/flight_list.dart';
 import 'package:gliding_aid/ui/views/widgets/flutter_map_opentopo_polyline.dart';
+import 'package:gliding_aid/ui/views/widgets/overview_stats.dart';
 import 'package:provider/provider.dart';
 
 class HorizontalHomePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HorizontalHomePageState extends State<HorizontalHomePage> {
   Widget build(BuildContext context) {
     return const Row(
       children: [
-        HomeMenu(ratio: 0.4),
+        SizedBox(width: 442.0, child: HomeMenu(ratio: 0.4)),
         Expanded(child: FlutterMapOpentopoPolyline())
       ],
     );
@@ -73,9 +74,7 @@ class _HomeMenuState extends State<HomeMenu> {
     if (map.flights.isEmpty) {
       return const SizedBox.shrink();
     } else {
-      return SizedBox(
-          width: 442.0,
-          child: Column(children: [
+      return Column(children: [
             const Expanded(child: SingleChildScrollView(child: FlightList())),
             Slider(
               value: map.getOverviewProgress(),
@@ -88,8 +87,9 @@ class _HomeMenuState extends State<HomeMenu> {
                 });
               },
             ),
+            OverviewStats(),
             SizedBox(height: widget.ratio * height, child: const FlightChart()),
-          ]));
+          ]);
     }
   }
 }
