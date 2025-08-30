@@ -20,13 +20,10 @@ class MapViewModel with ChangeNotifier {
   LineChartData? lineChartData;
   bool widgetReady =
       false; // to know whether we can use the mapcontroller or not
-  double _flightProgression = 0;
   int _flightProgressionIndex = 0;
   bool overviewVisibilty = false;
 
   double get initialZoom => _initialZoom;
-
-  double get overviewProgress => _flightProgression;
 
   int get flightProgressionIndex => _flightProgressionIndex;
 
