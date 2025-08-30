@@ -43,7 +43,7 @@ class MyHomePage extends StatelessWidget {
             Positioned(
                 top: 10,
                 right: 10,
-                child: Container(
+                child: SafeArea(child:  Container(
                     height: 55,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(60)),
@@ -59,7 +59,7 @@ class MyHomePage extends StatelessWidget {
                             spreadRadius: 2.0,
                           ), //BoxShadow
                         ]),
-                    child: const TopToolbar())),
+                    child: const TopToolbar()))),
           ],
         ),
       ),
