@@ -92,8 +92,8 @@ class MapViewModel with ChangeNotifier {
     flights.remove(name);
     if (flights.isEmpty) {
       lineChartData = LineChartData();
-      overviewVisibilty = false;
     }
+    overviewVisibilty = false;
     notifyListeners();
   }
 
