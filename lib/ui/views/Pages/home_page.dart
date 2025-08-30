@@ -1,14 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gliding_aid/ui/views/widgets/flight_list.dart';
+import 'package:gliding_aid/ui/views/Pages/db_provider_widget.dart';
+import 'package:gliding_aid/ui/views/Pages/home_page_common.dart';
 import 'package:gliding_aid/ui/views/widgets/menu_toolbar.dart';
-import 'package:gliding_aid/ui/views/widgets/flutter_map_opentopo_polyline.dart';
-import 'package:http_cache_drift_store/http_cache_drift_store.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 
-import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
-import 'package:gliding_aid/ui/views/widgets/chart.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
@@ -33,188 +27,42 @@ class MyHomePage extends StatelessWidget {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     // we need a layoutbuilder widget https://clouddevs.com/flutter/responsive-design/#:~:text=The%20LayoutBuilder%20widget%20gives%20you,adapt%20to%20different%20screen%20sizes.
-    if (kIsWeb) {
-      return Provider<DriftCacheStore>(
-        create: (context) => DriftCacheStore(
-          databasePath: '', // ignored on web
-          databaseName: 'DbCacheStore',
+    return DbProviderWidget(
+      child: Scaffold(
+        body: Stack(
+          // alignment: Alignment.center, // <---------
+          children: [
+            LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth > 900) {
+                return const HorizontalHomePage();
+              } else {
+                return const VerticalHomePage();
+              }
+            }),
+            Positioned(
+                top: 10,
+                right: 10,
+                child: Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(60)),
+                        color: Theme.of(context).colorScheme.surface,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            offset: const Offset(
+                              5.0,
+                              5.0,
+                            ),
+                            blurRadius: 10.0,
+                            spreadRadius: 2.0,
+                          ), //BoxShadow
+                        ]),
+                    child: const TopToolbar())),
+          ],
         ),
-        child: Scaffold(
-          body: Stack(
-            // alignment: Alignment.center, // <---------
-            children: [
-              LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                if (constraints.maxWidth > 900) {
-                  return const HorizontalHomePage();
-                } else {
-                  return const VerticalHomePage();
-                }
-              }),
-              Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Container(
-                      height: 55,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(60)),
-                          color: Theme.of(context).colorScheme.surface,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: const Offset(
-                                5.0,
-                                5.0,
-                              ),
-                              blurRadius: 10.0,
-                              spreadRadius: 2.0,
-                            ), //BoxShadow
-                          ]),
-                      child: const TopToolbar())),
-            ],
-          ),
-        ),
-        dispose: (context, db) => db.close(),
-      );
-    } else
-      return FutureBuilder(
-          future: getTemporaryDirectory(),
-          builder: (ctx, snapshot) {
-            if (snapshot.hasData) {
-              final dataPath = snapshot.requireData.path;
-              return Provider<DriftCacheStore>(
-                create: (context) => DriftCacheStore(
-                  databasePath: kIsWeb ? '' : dataPath, // ignored on web
-                  databaseName: 'DbCacheStore',
-                ),
-                child: Scaffold(
-                    body: Stack(
-                  // alignment: Alignment.center, // <---------
-                  children: [
-                    LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      if (constraints.maxWidth > 900) {
-                        return const HorizontalHomePage();
-                      } else {
-                        return const VerticalHomePage();
-                      }
-                    }),
-                    Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Container(
-                            height: 55,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(60)),
-                                color: Theme.of(context).colorScheme.surface,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: const Offset(
-                                      5.0,
-                                      5.0,
-                                    ),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 2.0,
-                                  ), //BoxShadow
-                                ]),
-                            child: const TopToolbar())),
-                  ],
-                )),
-                dispose: (context, db) => db.close(),
-              );
-            } else {
-              return Text("Hello");
-            }
-          });
-  }
-}
-
-class HorizontalHomePage extends StatefulWidget {
-  const HorizontalHomePage({super.key});
-
-  @override
-  State<HorizontalHomePage> createState() => _HorizontalHomePageState();
-}
-
-class _HorizontalHomePageState extends State<HorizontalHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        HomeMenu(ratio: 0.4),
-        Expanded(child: FlutterMapOpentopoPolyline())
-      ],
+      ),
     );
-  }
-}
-
-class VerticalHomePage extends StatefulWidget {
-  const VerticalHomePage({super.key});
-
-  @override
-  State<VerticalHomePage> createState() => _VerticalHomePageState();
-}
-
-class _VerticalHomePageState extends State<VerticalHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height;
-    return Column(children: [
-      FlutterMapOpentopoPolyline(),
-      Consumer<MapViewModel>(
-          builder: (ctx, map, _) => Builder(builder: (ctx) {
-                if (map.flights.isNotEmpty) {
-                  return SizedBox(
-                      height: 0.4 * height, child: HomeMenu(ratio: 0.2));
-                } else {
-                  return SizedBox.shrink();
-                }
-              }))
-    ]);
-  }
-}
-
-class HomeMenu extends StatefulWidget {
-  const HomeMenu({
-    super.key,
-    required this.ratio,
-  });
-
-  final double ratio;
-
-  @override
-  State<HomeMenu> createState() => _HomeMenuState();
-}
-
-class _HomeMenuState extends State<HomeMenu> {
-  double progression = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height;
-    var map = Provider.of<MapViewModel>(context);
-    if (map.flights.isEmpty) {
-      return const SizedBox.shrink();
-    } else {
-      return SizedBox(
-          width: 442.0,
-          child: Column(children: [
-            const Expanded(child: SingleChildScrollView(child: FlightList())),
-            Slider(
-              value: map.getOverviewProgress(),
-              min: 0,
-              max: 100,
-              onChanged: (double value) {
-                setState(() {
-                  progression = value;
-                  map.setFlightOverviewPoint(value);
-                });
-              },
-            ),
-            SizedBox(height: widget.ratio * height, child: const FlightChart()),
-          ]));
-    }
   }
 }

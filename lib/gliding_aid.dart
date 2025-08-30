@@ -29,7 +29,7 @@ class GlidingAid extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [Locale('en'), Locale('fr')],
-          home: const MyHomePage(title: 'GlidingAid'),
+          home: MyHomePage(title: 'GlidingAid'),
         ),
       );
   }

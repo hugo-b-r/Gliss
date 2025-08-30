@@ -47,7 +47,7 @@ class Flight {
 
   bool valid = true;
   List<String> notes = [];
-  List<GNSSFix> _fixes = [];
+  final List<GNSSFix> _fixes;
   List<Thermal> thermals = [];
   List<Glide> glides = [];
   GNSSFix takeoffFix = GNSSFix(0, 0, 0, "", 0, 0, "");
