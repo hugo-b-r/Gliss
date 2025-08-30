@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gliding_aid/data/files.dart';
+import 'package:gliding_aid/ui/viewmodels/opentopo_distinguishable_palette.dart';
 import 'package:gliding_aid/utils/flight.dart';
 import 'package:gliding_aid/utils/flight_parsing_config.dart';
 import 'package:gliding_aid/utils/gnss_fix.dart';
@@ -75,8 +76,7 @@ class MapViewModel with ChangeNotifier {
     FlightViewModel? flVm;
     for (var (content, name) in contentName) {
       var currentFlight = Flight.createFromFile(content, FlightParsingConfig());
-      Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-          .withValues(alpha: 1.0);
+      Color randomColor = openTopoDistinguishablePalette[math.Random().nextInt(openTopoDistinguishablePalette.length)];
       flVm = FlightViewModel(currentFlight, randomColor, 3, name);
 
       flights[name] = flVm;

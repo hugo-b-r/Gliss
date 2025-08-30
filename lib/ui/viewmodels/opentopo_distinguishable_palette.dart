@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+
+List<Color> openTopoDistinguishablePalette = [
+  Color.fromARGB(255, 95, 84, 30),
+  Color.fromARGB(255, 0, 0, 0),
+  Color.fromARGB(255, 255, 0, 0),
+  Color.fromARGB(255, 170, 55, 55),
+  Color.fromARGB(255, 255, 75, 75),
+  Color.fromARGB(255, 27, 147, 0),
+  Color.fromARGB(255, 179, 255, 114),
+  Color.fromARGB(255, 0, 104, 30),
+  Color.fromARGB(255, 33, 117, 75),
+  Color.fromARGB(255, 255, 0, 251),
+  Color.fromARGB(255, 233, 99, 255),
+  Color.fromARGB(255, 112, 39, 129),
+  Color.fromARGB(255, 133, 76, 136),
+  Color.fromARGB(255, 156, 0, 42),
+  Color.fromARGB(255, 10, 79, 255),
+  Color.fromARGB(255, 0, 19, 147),
+  Color.fromARGB(255, 86, 179, 255),
+  Color.fromARGB(255, 43, 142, 137),
+  Color.fromARGB(255, 0, 19, 147),
+  Color.fromARGB(255, 255, 114, 0),
+  Color.fromARGB(255, 255, 169, 58),
+  Color.fromARGB(255, 147, 66, 0),
+];
