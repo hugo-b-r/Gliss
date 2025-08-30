@@ -77,7 +77,7 @@ class MapViewModel with ChangeNotifier {
       var currentFlight = Flight.createFromFile(content, FlightParsingConfig());
       Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
           .withValues(alpha: 1.0);
-      flVm = FlightViewModel(currentFlight, randomColor, 4, name);
+      flVm = FlightViewModel(currentFlight, randomColor, 3, name);
 
       flights[name] = flVm;
       selectedFlight = name;

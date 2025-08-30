@@ -20,7 +20,7 @@ class FlightViewModel extends ChangeNotifier {
   FlightViewModel(Flight flight, Color c, double strokeWidth, String n) {
     _flight = flight;
     color = c;
-    _pl = _flight.toPolyline(strokeWidth, color);
+    _pl = _flight.toCleanPolyline(strokeWidth, color);
     _boundaries = LatLngBounds.fromPoints(_flight.points());
     name = n;
     overviewFix = flight.fixes()[0];
