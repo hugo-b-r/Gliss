@@ -3,6 +3,7 @@
 A new Flutter project. that is aimed at helping glider pilots nalyze their flights. It will be used
 as a flight logbook as well.
 
+![images/logo.png]
 
 ## Building
 
