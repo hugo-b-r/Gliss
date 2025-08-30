@@ -39,7 +39,6 @@ dependencies:
 
   flutter_map: ^8.1.1
   flutter_map_cache: ^2.0.0+1 # this packag
-  flutter_map_cancellable_tile_provider: ^3.0.0
   latlong2: ^0.9.1
   # caching the tiles
   path_provider: ^2.1.5
@@ -125,7 +124,7 @@ msix_config:
   display_name: GlidingAid
   publisher_display_name: "Hugo Berthet-Rambaud"
   identity_name: fr.hugobr.glidingaid
-  msix_version: 0.0.1.9
+  msix_version: 0.0.1.10
   logo_path: ./images/logo.png
   capabilities: internetClient, location
   file_extension: .igc
