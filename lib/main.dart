@@ -8,6 +8,6 @@ Future<String> getPath() async {
   return cacheDirectory.path;
 }
 
-void main() {
-  runApp(const GlidingAid());
+void main(List<String> arguments) {
+  runApp(GlidingAid(arguments: arguments));
 }

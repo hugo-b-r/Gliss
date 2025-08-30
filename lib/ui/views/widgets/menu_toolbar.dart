@@ -20,7 +20,7 @@ class TopToolbar extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  await map.openIgcFile();
+                  await map.pickAndOpenIgcFile();
                 },
                 child: Text(AppLocalizations.of(context)!.openFlight),
               ),

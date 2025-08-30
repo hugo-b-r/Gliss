@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
@@ -9,10 +11,12 @@ import 'package:gliding_aid/ui/viewmodels/opentopo_distinguishable_palette.dart'
 import 'package:gliding_aid/utils/flight.dart';
 import 'package:gliding_aid/utils/flight_parsing_config.dart';
 import 'package:gliding_aid/utils/gnss_fix.dart';
+import 'package:path/path.dart';
 import '../../ui/viewmodels/flight_view_model.dart';
 
 class MapViewModel with ChangeNotifier {
   final Map<String, FlightViewModel> flights = {};
+  late List<String>? _filesToParse;
   MapController? mapController;
   final double _initialZoom = 7;
   String? selectedFlight;
@@ -22,6 +26,10 @@ class MapViewModel with ChangeNotifier {
       false; // to know whether we can use the mapcontroller or not
   int _flightProgressionIndex = 0;
   bool overviewVisibilty = false;
+
+  MapViewModel({required List<String>? filesToParse}) {
+    _filesToParse = filesToParse;
+  }
 
   double get initialZoom => _initialZoom;
 
@@ -44,35 +52,20 @@ class MapViewModel with ChangeNotifier {
     return polylines;
   }
 
-  Future<void> openIgcFile() async {
+  Future<void> pickAndOpenIgcFile() async {
     List<(String, String)> contentName = [];
-    // try {
-    //   (file, name) = await pickFirstFile();
-    //   _loadedIgcFile = file;
-    // } catch (e) {
-    //   throw Exception(e);
-    // }
-    // var currentFlight =
-    //     Flight.createFromFile(_loadedIgcFile, FlightParsingConfig());
-    // Color randomColor = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-    //     .withValues(alpha: 1.0);
-    // var flVm = FlightViewModel(currentFlight, randomColor, 4, name);
-    //
-    // flights[name] = flVm;
-    //
-    // setCurrentChartData(flVm);
-    //
-    // if (widgetReady) {
-    //   mapController!.move(flVm.boundaries.center, _initialZoom);
-    //   mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
-    // }
-    // notifyListeners();
 
     try {
       contentName = await pickManyFiles();
     } catch (e) {
       throw Exception(e);
     }
+
+    openIgcFiles(contentName);
+  }
+
+  void openIgcFiles(List<(String, String)> contentName) {
+
     FlightViewModel? flVm;
     for (var (content, name) in contentName) {
       var currentFlight = Flight.createFromFile(content, FlightParsingConfig());
@@ -81,6 +74,10 @@ class MapViewModel with ChangeNotifier {
 
       flights[name] = flVm;
       selectedFlight = name;
+      // we have opened a file so it should have been called once, right ?
+      setCurrentChartData(flVm);
+      mapController!.move(flVm.boundaries.center, _initialZoom);
+      mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
     }
 
     if (flVm != null) {
@@ -169,6 +166,17 @@ class MapViewModel with ChangeNotifier {
   }
 
   void isReady() {
+    if (_filesToParse != null) {
+      List<(String, String)> contentName = [];
+      for (var filePath in _filesToParse!) {
+        var file = File(filePath);
+        if (file.existsSync()) {
+          contentName.add((file.readAsStringSync(), basename(file.path)));
+        }
+      }
+      openIgcFiles(contentName);
+      _filesToParse = [];
+    }
     widgetReady = true;
   }
 
