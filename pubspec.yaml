@@ -118,3 +118,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+msix_config:
+  display_name: GlidingAid
+  identity_name: fr.hugobr.glidingaid
+  msix_version: 0.0.1.0
+  logo_path: ./images/logo.png
+  capabilities: internetClient, location
