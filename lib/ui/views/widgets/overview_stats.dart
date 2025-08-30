@@ -11,8 +11,8 @@ class OverviewStats extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-        Text("Altitude : ${map.getActualOverviewFix().gnssAlt} m"),
-        Text("Vitesse : ${map.getActualOverviewFix().gsp} km/h"),
+        Text("Altitude : ${map.getActualOverviewFix().gnssAlt.toStringAsFixed(0)} m"),
+        Text("Vitesse : ${map.getActualOverviewFix().gsp.toStringAsFixed(0)} km/h"),
       ],);
     }));
   }

@@ -135,6 +135,7 @@ class Flight {
     }
 
     _computeBearings();
+    _computeGsp();
     if (pressAltValid) {
       altSource = "PRESS";
     } else if (gnssAltValid) {
@@ -405,6 +406,19 @@ class Flight {
       _fixes[i].bearing = _fixes[i].bearingTo(_fixes[i+1]);
       if (_fixes[i].bearing.isNaN) {
         _fixes[i].bearing = 0;
+      }
+    }
+  }
+
+  void _computeGsp() {
+   _fixes[0].gsp = 0;
+    for (int i = 1; i < _fixes.length; i++) {
+      var dist = _fixes[i].distanceTo(_fixes[i-1]);
+      var rawtime = _fixes[i].rawtime - _fixes[i-1].rawtime;
+      if (rawtime.abs() < 1e-5) {
+        _fixes[i].gsp = 0;
+      } else {
+        _fixes[i].gsp = dist/rawtime * 3.6; // in km/h
       }
     }
   }
