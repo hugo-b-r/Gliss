@@ -58,6 +58,8 @@ dependencies:
   dio: ^5.2.0+1
   dio_cache_interceptor: ^4.0.0
   sqlite3_flutter_libs: ^0.5.37
+  toastification: ^3.0.3
+  path: ^1.9.1
 
 
 
@@ -123,7 +125,7 @@ msix_config:
   display_name: GlidingAid
   publisher_display_name: "Hugo Berthet-Rambaud"
   identity_name: fr.hugobr.glidingaid
-  msix_version: 0.0.1.3
+  msix_version: 0.0.1.9
   logo_path: ./images/logo.png
   capabilities: internetClient, location
   file_extension: .igc

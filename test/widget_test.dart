@@ -14,7 +14,7 @@ import 'package:gliding_aid/gliding_aid.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const GlidingAid());
+    await tester.pumpWidget(const GlidingAid(arguments: []));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

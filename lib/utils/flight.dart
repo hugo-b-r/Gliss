@@ -433,10 +433,32 @@ class Flight {
     );
   }
 
+  // without 0 : 0 points
+  Polyline toCleanPolyline(double strokeWidth, Color lineColor) {
+    return Polyline(
+      points: cleanPoints(),
+      color: lineColor,
+      strokeWidth: strokeWidth,
+      borderColor: Colors.white,
+      borderStrokeWidth: 2,
+    );
+  }
+
   List<LatLng> points() {
     List<LatLng> points = [];
     for (var fix in _fixes) {
       points.add(fix.toLatLng());
+    }
+    return points;
+  }
+
+  // clean without the 0 : 0 points
+  List<LatLng> cleanPoints() {
+    List<LatLng> points = [];
+    for (var fix in _fixes) {
+      if (fix.lat != 0 || fix.lon != 0) {
+        points.add(fix.toLatLng());
+      }
     }
     return points;
   }
