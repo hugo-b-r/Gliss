@@ -8,9 +8,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _notificationsEnabled = true;
-  String _selectedLanguage = 'English';
-  double _fontSize = 16.0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,54 +19,6 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
-          SwitchListTile(
-            title: const Text('Enable Notifications'),
-            value: _notificationsEnabled,
-            onChanged: (bool value) {
-              setState(() {
-                _notificationsEnabled = value;
-              });
-            },
-            secondary: const Icon(Icons.notifications),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: const Text('Language'),
-            trailing: DropdownButton<String>(
-              value: _selectedLanguage,
-              items: <String>['English', 'Spanish', 'French', 'German']
-                  .map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedLanguage = newValue!;
-                });
-              },
-            ),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.format_size),
-            title: Text('Font Size: ${_fontSize.round()}'),
-            subtitle: Slider(
-              value: _fontSize,
-              min: 10.0,
-              max: 30.0,
-              divisions: 20,
-              label: _fontSize.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _fontSize = value;
-                });
-              },
-            ),
-          ),
-          const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('About'),
