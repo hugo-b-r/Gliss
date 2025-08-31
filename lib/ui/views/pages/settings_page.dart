@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/ui/viewmodels/settings_view_model.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -8,7 +10,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,22 +26,33 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () {
               // Navigate to About Page or show a dialog
               showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('About App'),
-                    content: const Text('This is a sample settings page for a Flutter application. Version 1.0.0'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Close'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Consumer<SettingsViewModel>(
+                        builder: (context, settings, _) {
+                      return AlertDialog(
+                        icon: SizedBox(width: 20, child: Image(image: AssetImage('images/logo.png'))),
+                        title: Text('About GlidingAid'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          // SizedBox(width: 200, child: Image(image: AssetImage('images/logo.png'))),
+                          Text(
+                              'This is a sample settings page for a Flutter application.'),
+                          Text('Version : ${settings.appVersion}'),
+                          Text('Build number : ${settings.appBuildNumber}')
+                        ]),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    });
+                  });
             },
           ),
         ],
