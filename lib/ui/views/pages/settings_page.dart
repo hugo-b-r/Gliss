@@ -30,27 +30,40 @@ class _SettingsPageState extends State<SettingsPage> {
                   builder: (BuildContext context) {
                     return Consumer<SettingsViewModel>(
                         builder: (context, settings, _) {
-                      return AlertDialog(
-                        icon: SizedBox(width: 20, child: Image(image: AssetImage('images/logo.png'))),
-                        title: Text('About GlidingAid'),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                          // SizedBox(width: 200, child: Image(image: AssetImage('images/logo.png'))),
-                          Text(
-                              'This is a sample settings page for a Flutter application.'),
-                          Text('Version : ${settings.appVersion}'),
-                          Text('Build number : ${settings.appBuildNumber}')
-                        ]),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('Close'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
+                      return FutureBuilder(
+                          future: settings.updatePackageInfoIfNeeded(),
+                          builder: (ctx, snapshot) {
+                            if (snapshot.hasData && snapshot.requireData) {
+                              return AlertDialog(
+                                icon: SizedBox(
+                                    width: 20,
+                                    child: Image(
+                                        image: AssetImage('images/logo.png'))),
+                                title: Text('About GlidingAid'),
+                                content: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // SizedBox(width: 200, child: Image(image: AssetImage('images/logo.png'))),
+                                      Text(
+                                          'This is a sample settings page for a Flutter application.'),
+                                      Text('Version : ${settings.appVersion}'),
+                                      Text(
+                                          'Build number : ${settings.appBuildNumber}')
+                                    ]),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return SizedBox.shrink();
+                            }
+                          });
                     });
                   });
             },
