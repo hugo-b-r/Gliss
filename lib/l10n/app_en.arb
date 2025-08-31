@@ -1,5 +1,11 @@
 {
   "openFlight" : "Open a flight",
   "pickYourColor" : "Pick a color",
-  "done" : "Done"
+  "done" : "Done",
+  "aboutTitle" : "About GlidingAid",
+  "aboutDesc" : "A simple IGC flight recorded viewer.",
+  "version" : "Version",
+  "buildNumber" : "Build number",
+  "close" : "Close",
+  "about" : "About"
 }

@@ -1,5 +1,11 @@
 {
   "openFlight" : "Ouvrir un vol",
   "pickYourColor" : "Choisir une couleur",
-  "done" : "Ok"
+  "done" : "Ok",
+  "aboutTitle" : "A propos de GlidingAid",
+  "aboutDesc" : "Un simple visionneur de vols enregistrés au format IGC.",
+  "version" : "Version",
+  "buildNumber" : "Numéro de compilation",
+  "close" : "Fermer",
+  "about" : "A propos"
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gliding_aid/l10n/app_localizations.dart';
 import 'package:gliding_aid/ui/viewmodels/settings_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: <Widget>[
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
+            title: Text(AppLocalizations.of(context)!.about),
             onTap: () {
               // Navigate to About Page or show a dialog
               showDialog(
@@ -39,21 +40,24 @@ class _SettingsPageState extends State<SettingsPage> {
                                     width: 20,
                                     child: Image(
                                         image: AssetImage('images/logo.png'))),
-                                title: Text('About GlidingAid'),
+                                title: Text(
+                                    '${AppLocalizations.of(context)!.aboutTitle}'),
                                 content: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       // SizedBox(width: 200, child: Image(image: AssetImage('images/logo.png'))),
+                                      Text(AppLocalizations.of(context)!
+                                          .aboutDesc),
                                       Text(
-                                          'This is a sample settings page for a Flutter application.'),
-                                      Text('Version : ${settings.appVersion}'),
+                                          '${AppLocalizations.of(context)!.version} : ${settings.appVersion}'),
                                       Text(
-                                          'Build number : ${settings.appBuildNumber}')
+                                          '${AppLocalizations.of(context)!.buildNumber} : ${settings.appBuildNumber}')
                                     ]),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Close'),
+                                    child: Text(
+                                        AppLocalizations.of(context)!.close),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
