@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 
@@ -61,37 +62,45 @@ class MapViewModel with ChangeNotifier {
       throw Exception(e);
     }
 
-    openIgcFiles(contentName);
+    await openIgcFiles(contentName);
   }
 
-  void openIgcFiles(List<(String, String)> contentName) {
+  Future<void> openIgcFiles(List<(String, String)> contentName) async {
 
-    FlightViewModel? flVm;
-    for (var (content, name) in contentName) {
-      var currentFlight = Flight.createFromFile(content, FlightParsingConfig());
+    FlightViewModel flightToFlightViewModelComputeFunc((String, String) contentName) {
+      var currentFlight = Flight.createFromFile(contentName.$1, FlightParsingConfig());
       Color randomColor = openTopoDistinguishablePalette[math.Random().nextInt(openTopoDistinguishablePalette.length)];
-      flVm = FlightViewModel(currentFlight, randomColor, 3, name);
-
-      flights[name] = flVm;
-      selectedFlight = name;
-      // we have opened a file so it should have been called once, right ?
-      setCurrentChartData(flVm);
-      mapController!.move(flVm.boundaries.center, _initialZoom);
-      mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
+      FlightViewModel flVm = FlightViewModel(currentFlight, randomColor, 3, contentName.$2);
+      return flVm;
     }
 
-    if (flVm != null) {
-      // we have opened a file so it should have been called once, right ?
-      setCurrentChartData(flVm);
-      if (widgetReady) {
-        mapController!.move(flVm.boundaries.center, _initialZoom);
-        mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
-      }
+    List<(String, Future<FlightViewModel>)> futFlightViewModels = [];
+    for (var (content, name) in contentName) {
+      futFlightViewModels.add((name, compute(flightToFlightViewModelComputeFunc as ComputeCallback<(String, String), FlightViewModel>, (content, name))));
     }
 
+    for (var (name, fut) in futFlightViewModels) {
+      flights[name] = await fut;
+      notifyListeners();
 
-    notifyListeners();
+    }
+    //
+    // if (flVm != null) {
+    //   // we have opened a file so it should have been called once, right ?
+    //   setCurrentChartData(flVm);
+    //   if (widgetReady) {
+    //     // we have opened a file so it should have been called once, right ?
+    //     setCurrentChartData(flVm);
+    //     mapController!.move(flVm.boundaries.center, _initialZoom);
+    //     mapController!.fitCamera(CameraFit.bounds(bounds: flVm.boundaries));
+    //   }
+    // }
+    //
+    //
+    // notifyListeners();
   }
+
+
 
   void updateFlightColor(String n, Color c) {
     flights[n]?.setColor(c);
