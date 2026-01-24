@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:gliding_aid/ui/viewmodels/settings_view_model.dart';
-import 'package:gliding_aid/ui/views/Pages/home_page.dart';
+import 'package:gliding_aid/ui/views/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';

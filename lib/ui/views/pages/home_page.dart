@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gliding_aid/ui/views/widgets/db_provider_widget.dart';
-import 'package:gliding_aid/ui/views/Pages/home_page_common.dart';
+import 'package:gliding_aid/ui/views/pages/home_page_common.dart';
 import 'package:gliding_aid/ui/views/widgets/menu_toolbar.dart';
 
 

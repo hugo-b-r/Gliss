@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gliding_aid/ui/views/Pages/settings_page.dart';
+import 'package:gliding_aid/ui/views/pages/settings_page.dart';
 import 'package:gliding_aid/ui/viewmodels/map_view_model.dart';
 import 'package:provider/provider.dart';
 
