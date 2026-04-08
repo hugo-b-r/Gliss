@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gliding_aid/ui/views/widgets/oriented_plane_marker.dart';
+import 'package:gliding_aid/utils/gnss_fix.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
@@ -39,8 +41,7 @@ class _FlutterMapOpentopoPolylineState
                   initialZoom: 3.2,
                   initialCenter: const LatLng(50.0, 5.0),
                   interactionOptions: const InteractionOptions(
-                    flags: InteractiveFlag.all  & ~InteractiveFlag.pinchMove
-                  ),
+                      flags: InteractiveFlag.all & ~InteractiveFlag.pinchMove),
                   onMapReady: () => {map.isReady()}),
               children: [
                 TileLayer(
@@ -65,35 +66,7 @@ class _FlutterMapOpentopoPolylineState
                 PolylineLayer(
                   polylines: map.polylines(),
                 ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: map.getActualOverviewFix().toLatLng(),
-                      width: 80,
-                      height: 80,
-                      child: Visibility(
-                        visible: map.overviewVisibilty,
-                        child: Transform.rotate(
-                            angle: map.getActualOverviewFix().bearing *
-                                math.pi /
-                                180,
-                            child: Icon(
-                              Icons.flight,
-                              color: map.getOverviewColor(),
-                              size: 50,
-                              weight: 3,
-                              shadows: List.generate(
-                                10,
-                                (index) => Shadow(
-                                  blurRadius: 2,
-                                  color: Theme.of(context).canvasColor,
-                                ),
-                              ),
-                            )),
-                      ),
-                    ),
-                  ],
-                ),
+                OrientedPlaneMarker(),
                 const RichAttributionWidget(
                     animationConfig: ScaleRAWA(),
                     attributions: [
